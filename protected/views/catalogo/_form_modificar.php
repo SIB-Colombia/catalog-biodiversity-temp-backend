@@ -591,10 +591,11 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     			'buttons' => array(
 					array(
 						'label' => 'Agregar atributo',
-						'url' => '#',
+						'url' => '',
 						'icon'=>'icon-plus',
 						'htmlOptions' => array(
-							'onclick'=>'{$("#zona-adicionar-atributos").show();}',
+							'id' => 'btnAdicionarAtributo',
+							'onclick'=>'{$("#zona-adicionar-atributos").show();$("#btnAdicionarAtributo").addClass("disabled");}',
 						),
 					),
 				)

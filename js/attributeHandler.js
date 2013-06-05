@@ -99,5 +99,7 @@ $("#Atributos_tipoAtributo").change(function(){
    			$("#form-attibute-selected").html('<div class="control-group "><label class="control-label" for="attribute">Créditos específicos</label><div class="controls"><textarea class="span8" rows="10" name="Atributos[436]" id="attribute"></textarea></div></div>');
    			$('#attribute').wysihtml5();
    		}
+   		$("#btnGuardarAtributo").show();
+		$("#btnCancelarGuardarAtributo").show();
    	}
 });

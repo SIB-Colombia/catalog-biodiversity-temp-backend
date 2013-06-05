@@ -28,7 +28,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{delete}',
 			'htmlOptions'=>array('style'=>'width: 50px'),
-			'deleteButtonUrl'=>'Yii::app()->createUrl("/catalogo/delete", array("idAtributo"=>$data["valor"]))',
+			'deleteButtonUrl'=>'Yii::app()->createUrl("/catalogo/deleteattribute", array("idAtributo"=>$data["valor"]))',
 		),
 	),
 ));

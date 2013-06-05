@@ -36,6 +36,11 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 			complete: 
 				function(){
 					$("#zona-adicionar-atributos").removeClass("loading");
+					$("#btnGuardarAtributo").hide();
+					$("#btnCancelarGuardarAtributo").hide();
+					$("#Atributos_tipoAtributo").prop("selectedIndex",0);
+					$("#zona-adicionar-atributos").hide();
+					$("#btnAdicionarAtributo").removeClass("disabled");
 				},
 			success: 
 				function(data) {
@@ -50,8 +55,6 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 						$("#newAttributeConfirmation-content").html(data.respuesta);
 						$("#zona-lista-atributos").html(data.newAttributeList);
 						$("#form-attibute-selected").html("");
-						$("#zona-adicionar-atributos").hide();
-						$("#Atributos_tipoAtributo").val("");
 						$("#newAttributeConfirmation").dialog("open");
 					}
 				},
@@ -138,5 +141,41 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>
 
 <div id="form-attibute-selected"></div>
+<div class="control-group">
+	<div class="controls">
+		<?php $this->widget('bootstrap.widgets.TbButtonGroup', array(
+    		'size' => 'small',
+    		'type' => 'primary', // '', 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
+    		'buttons' => array(
+				array(
+					'label' => 'Cancelar',
+					'url' => '',
+					'icon'=>'icon-remove-circle',
+					'htmlOptions' => array(
+						'id' => 'btnCancelarGuardarAtributo',
+						'style' => 'display: none;',
+						'onclick'=>'{$("#form-attibute-selected").html("");$("#btnGuardarAtributo").hide();$("#btnCancelarGuardarAtributo").hide();$("#Atributos_tipoAtributo").prop("selectedIndex",0);$("#zona-adicionar-atributos").hide();$("#btnAdicionarAtributo").removeClass("disabled");}',
+					),
+				),
+			)
+    	)); ?>	
+		<?php $this->widget('bootstrap.widgets.TbButtonGroup', array(
+    		'size' => 'small',
+    		'type' => 'primary', // '', 'primary', 'info', 'success', 'warning', 'danger' or 'inverse'
+    		'buttons' => array(
+				array(
+					'label' => 'Guardar',
+					'url' => '',
+					'icon'=>'icon-ok-sign',
+					'htmlOptions' => array(
+						'id' => 'btnGuardarAtributo',
+						'style' => 'display: none;',
+						'onclick'=>'{saveAttribute($("#Atributos_tipoAtributo option:selected").val().split(":")[0]);}',
+					),
+				),
+			)
+    	)); ?>
+    </div>
+</div>
 
 <?php Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js/attributeHandler.js', CClientScript::POS_END); ?>
