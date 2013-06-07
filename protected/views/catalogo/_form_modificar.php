@@ -12,6 +12,71 @@ Yii::app()->clientScript->registerCoreScript('jquery.ui');
 		});
 	}
 
+	function submitFormAtributoUpdate(id, modal, grid) {
+		<?php echo CHtml::ajax(array(
+			'url'=>"js:$('#atributo-form').attr('action')",
+			'data'=> "js:$('#'+id).serialize()",
+    		'type'=>'post',
+    		'dataType'=>'json',
+			'beforeSend' => 'function(){
+				$("#"+id+"-submit").hide(500);
+				$("#"+id+"-reset").hide(500);
+				$("#"+modal).addClass("loading");
+			}',
+			'complete' => 'function(){
+				$("#"+modal).removeClass("loading");
+			}',
+			'success'=>"function(data) {
+        		if (data.status == 'failure') {
+					$('#'+id+'-submit').show(500);
+					$('#'+id+'-reset').show(500);
+           			$('#'+modal+' div.modal-body').html(data.respuesta);
+            	} else {
+					$('#editar-atributo-form-submit').hide();
+					$('#editar-atributo-form-reset').hide();
+                	$('#'+modal+' div.modal-body').html(data.respuesta);
+					$.fn.yiiGridView.update(grid, {data: $(this).serialize()});
+                	setTimeout(\"$('#atributo-form-close').click() \",3000);
+            	}				
+        	}",
+   		))?>;	
+	}
+
+	function callAjaxUpdateAttribute(url, grid) {
+		$.ajax({
+			url: <?php echo "'".Yii::app()->createUrl("atributovalor/update")."/'";?>+url,
+			type: 'post',
+		    dataType: 'json',
+		    beforeSend: 
+			    function(){
+					$("#editar-atributo-form-submit").hide(500);
+					$("#editar-atributo-form-reset").hide(500);
+					$("#editar-atributo-form-submit").attr("onClick","{submitFormAtributoUpdate(\'atributo-form\', \'editarAtributoModal\', \'"+grid+"\');}");
+					$("#editar-atributo-form-reset").attr("onClick","{resetForm(\'atributo-form\');}");
+					$("#editarAtributoModal").addClass("loading");
+				},
+			complete: 
+				function(){
+					$("#editarAtributoModal").removeClass("loading");
+					$("#editar-atributo-form-submit").show(500);
+					$("#editar-atributo-form-reset").show(500);
+				},
+			success: 
+				function(data) {
+					if (data.status == 'failure') {
+						$('#editarAtributoModal div.modal-body').html(data.respuesta);
+						$('#editarAtributoModal').modal();
+						$("#atributo-botones-internos").hide(500);
+					}
+					else
+					{
+    					$('#editarAtributoModal div.modal-body').html(data.respuesta);
+						$('#editarAtributoModal').modal(); 
+					}
+				},
+		});
+	}
+
 	function submitForm(uri, id, modal, grid) {
 		<?php echo CHtml::ajax(array(
         	'url'=>array('pctesaurosCe/create'),
@@ -212,6 +277,38 @@ Yii::app()->clientScript->registerCoreScript('jquery.ui');
 		)); ?>
 	</div>
 <?php $this->endWidget(); ?>
+
+<?php $this->beginWidget('bootstrap.widgets.TbModal', array('id'=>'editarAtributoModal')); ?>
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h4>Modificar atributo</h4>
+    </div>
+ 
+	<div class="modal-body">
+	</div>
+ 
+	<div class="modal-footer">    
+		<?php $this->widget('bootstrap.widgets.TbButton', array(
+			'type'=>'primary',
+			'label'=>'Guardar',
+			'url'=>array('atributovalor/update'),
+			'buttonType'=>'submit',
+			'htmlOptions'=>array('id'=>'editar-atributo-form-submit'),
+		)); ?>
+		<?php $this->widget('bootstrap.widgets.TbButton', array(
+			'label'=>'Limpiar campos',
+			'url'=>'#',
+			'buttonType'=>'reset',
+				'htmlOptions'=>array('id'=>'editar-atributo-form-reset'),
+		)); ?>
+		<?php $this->widget('bootstrap.widgets.TbButton', array(
+			'label'=>'Cerrar',
+			'url'=>'#',
+			'htmlOptions'=>array('data-dismiss'=>'modal', 'id'=>'atributo-form-close'),
+		)); ?>
+	</div>
+<?php $this->endWidget(); ?>
+
 
 <p class="note">Los campos con <span class="required">*</span> son obligatorios.</p>
 

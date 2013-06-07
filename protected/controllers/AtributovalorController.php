@@ -347,13 +347,28 @@ class AtributovalorController extends Controller
 		if(isset($_POST['Atributovalor']))
 		{
 			$model->attributes=$_POST['Atributovalor'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			
+			if($model->save()) {
+				if (Yii::app()->request->isAjaxRequest) {
+					echo CJSON::encode(array(
+						'status'=>'success',
+						'respuesta'=>"Atributo guardado exitosamente.",
+					));
+					exit;
+				} else {
+					$this->redirect(array('view','id'=>$model->id));
+				}
+			}
 		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
+		
+		if (Yii::app()->request->isAjaxRequest) {
+			echo CJSON::encode(array(
+				'status'=>'failure',
+				'respuesta'=>$this->renderPartial('_form', array('model'=>$model), true)));
+			exit;
+		} else {
+			$this->render('update',array('model'=>$model,));
+		}
 	}
 
 	/**

@@ -12,9 +12,6 @@
 	<link rel="shortcut icon" href="http://www.sibcolombia.net/catalogo/admin/favicon.png" />
 	<link rel="apple-touch-icon" href="http://www.sibcolombia.net/catalogo/admin/apple.png" />
 
-	<!-- Fuentes google -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:700|Prosto+One' rel='stylesheet' type='text/css'>
-
 	<!--[if lt IE 8]>
 	<link rel="stylesheet" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/ie.css" media="screen, projection" />
 	<![endif]-->
