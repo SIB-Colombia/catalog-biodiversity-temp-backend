@@ -864,3 +864,8 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	});
 
 </script>
+
+<?php
+	// Include jquery-fineuploader for file upload support
+	Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl.'/js/jquery-fineuploader/jquery.fineuploader-3.6.3.min.js', CClientScript::POS_HEAD);
+?>

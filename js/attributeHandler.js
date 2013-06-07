@@ -101,5 +101,16 @@ $("#Atributos_tipoAtributo").change(function(){
    		}
    		$("#btnGuardarAtributo").show();
 		$("#btnCancelarGuardarAtributo").show();
+   	} else if(stringExploded[1] == 'upload') {
+   		if(stringExploded[0] == 39) {
+   			// We are working with image attribute
+   			$("#form-attibute-selected").html('<div id="fineUploaderElementImage"></div>');
+   		} else if(stringExploded[0] == 40) {
+   			// We are working with map attribute
+   		} else if(stringExploded[0] == 41) {
+			// We are working with video attribute
+		} else if(stringExploded[0] == 42) {
+			// We are working with sound attribute
+		}
    	}
 });
