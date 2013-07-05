@@ -104,7 +104,27 @@ $("#Atributos_tipoAtributo").change(function(){
    	} else if(stringExploded[1] == 'upload') {
    		if(stringExploded[0] == 39) {
    			// We are working with image attribute
-   			$("#form-attibute-selected").html('<div id="fineUploaderElementImage"></div>');
+   			$("#form-attibute-selected").html('<div class="control-group "><label class="control-label" for="attribute">Archivo</label><div class="controls"><div id="fineUploaderElementImage"></div></div></div>');
+   			$('#fineUploaderElementImage').fineUploader({
+   			    request: {
+   			        endpoint: '/upload/endpoint'
+   			    },
+   			    text: {
+		        	uploadButton: '<div><i class="icon-upload icon-white"></i> Arrastre el archivo u oprima este botón</div>'
+		        },
+		        template: '<div class="qq-uploader span12">' +
+		        		  '<pre class="qq-upload-drop-area span12"><span>{dragZoneText}</span></pre>' +
+		        		  '<div class="qq-upload-button btn btn-success" style="width: auto;">{uploadButtonText}</div>' +
+		        		  '<span class="qq-drop-processing"><span>{dropProcessingText}</span><span class="qq-drop-processing-spinner"></span></span>' +
+		        		  '<ul class="qq-upload-list" style="margin-top: 10px; text-align: center;"></ul>' +
+		        		  '</div>',
+		        classes: {
+		        	success: 'alert alert-success',
+		        	fail: 'alert alert-error'
+		        },
+   			});
+   			$("#btnGuardarAtributo").show();
+   			$("#btnCancelarGuardarAtributo").show();
    		} else if(stringExploded[0] == 40) {
    			// We are working with map attribute
    		} else if(stringExploded[0] == 41) {
