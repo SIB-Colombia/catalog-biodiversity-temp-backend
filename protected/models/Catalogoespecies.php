@@ -39,7 +39,8 @@ class Catalogoespecies extends CActiveRecord
 	private $_autorCita;
 	private $_personaContacto;
 	private $_organizacionContacto;
-	private $_listaNombresComunes; 
+	private $_listaNombresComunes;
+	public 	$ids_filter; 
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -167,6 +168,10 @@ class Catalogoespecies extends CActiveRecord
 				  ."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($this->nombresComunes_search)."%'";
 			
 			$criteria->addCondition('t.catalogoespecies_id IN ('.$sql.')');
+		}
+		
+		if($this->ids_filter != ''){
+			$criteria->addCondition('t.catalogoespecies_id IN ('.$this->ids_filter.')');
 		}
 
 		return new CActiveDataProvider($this, array(

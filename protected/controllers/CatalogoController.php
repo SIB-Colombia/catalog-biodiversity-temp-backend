@@ -40,6 +40,11 @@ class CatalogoController extends Controller
 				//'users'=>array('amsuarez'),
 				'roles'=>array('admin'),
 			),
+			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+					'actions'=>array('index','create','update','updateajaxmodifytables'),
+					//'users'=>array('amsuarez'),
+					'roles'=>array('editor'),
+			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -743,6 +748,25 @@ class CatalogoController extends Controller
 		$model2->unsetAttributes();  // clear any default values
 		$model3->unsetAttributes();  // clear any default values
 		$model4->unsetAttributes();  // clear any default values
+		
+		
+		$modelUser  = CatalogoUser::model()->find('"username"=:username', array(':username' => Yii::app()->user->name));
+		
+		if ($modelUser->role == "editor"){
+			$modelVer 	= Catalogoespecies::model()->with('verificacionce')->findAll('"verificacionce"."contacto_id"=:contactoId', array(':contactoId' => Yii::app()->user->name));
+			$ids		= array();
+			if (count($modelVer) > 0) {
+				for ($i = 0; $i < count($modelVer); $i++) {
+					$ids[] = $modelVer[$i]->catalogoespecies_id;
+				}
+				$ids_st = implode(",", $ids);
+				$model->ids_filter = $ids_st;
+				$model2->ids_filter = $ids_st;
+				$model3->ids_filter = $ids_st;
+				$model4->ids_filter = $ids_st;
+			}
+		}
+		
 		if(isset($_GET['Catalogoespecies'])) {
 			$model->attributes=$_GET['Catalogoespecies'];
 		}
