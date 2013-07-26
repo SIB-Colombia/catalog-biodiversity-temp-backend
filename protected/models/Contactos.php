@@ -55,7 +55,7 @@ class Contactos extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('persona, direccion, idPais, idDepartamentoEstadoProvincia, idMunicipio', 'required'),
+			array('persona, direccion, idPais, idDepartamentoEstadoProvincia, idMunicipio, correo_electronico', 'required'),
 			array('contacto_id, id_referente_geografico', 'numerical', 'integerOnly'=>true),
 			array('direccion, telefono', 'length', 'max'=>100),
 			array('acronimo, persona', 'length', 'max'=>50),

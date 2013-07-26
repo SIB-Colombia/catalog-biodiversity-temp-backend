@@ -16,6 +16,8 @@ class CatalogoUser extends CActiveRecord
 	 * @param string $className active record class name.
 	 * @return CatalogoUser the static model class
 	 */
+	public  $newpassword;
+	public  $password2;
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
@@ -37,9 +39,12 @@ class CatalogoUser extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('username, password', 'required'),
+			array('username, password,role,contacto_id', 'required'),
 			array('contacto_id', 'numerical', 'integerOnly'=>true),
-			array('username, password, role', 'length', 'max'=>32),
+			array('username, password, password2, role', 'length', 'max'=>32),
+			array('password', 'compare', 'compareAttribute'=>'password2', 'on'=>'insert'),
+			array('newpassword', 'compare', 'compareAttribute'=>'password2', 'on'=>'update'),
+			
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('username, password, contacto_id, role', 'safe', 'on'=>'search'),
@@ -63,10 +68,12 @@ class CatalogoUser extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'username' => 'Username',
+			'username' => 'Usuario',
 			'password' => 'Password',
+			'newpassword' => 'Nuevo Password',
+			'password2' => 'Confirmar Password',
 			'contacto_id' => 'Contacto',
-			'role' => 'Role',
+			'role' => 'Rol',
 		);
 	}
 
@@ -89,5 +96,14 @@ class CatalogoUser extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+	
+	public function ListarContactos()
+	{
+		$criteria=new CDbCriteria;
+		$criteria->addCondition('correo_electronico != \'\'');
+		$criteria->order='persona';
+		$contactosSearch = Contactos::model()->findAll($criteria);
+		return CHtml::listData($contactosSearch, 'contacto_id', 'persona');
 	}
 }

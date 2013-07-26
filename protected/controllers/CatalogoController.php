@@ -750,20 +750,36 @@ class CatalogoController extends Controller
 		$model4->unsetAttributes();  // clear any default values
 		
 		
-		$modelUser  = CatalogoUser::model()->find('"username"=:username', array(':username' => Yii::app()->user->name));
+		$userRole  = Yii::app()->user->getState("roles");
 		
-		if ($modelUser->role == "editor"){
-			$modelVer 	= Catalogoespecies::model()->with('verificacionce')->findAll('"verificacionce"."contacto_id"=:contactoId', array(':contactoId' => Yii::app()->user->name));
-			$ids		= array();
-			if (count($modelVer) > 0) {
-				for ($i = 0; $i < count($modelVer); $i++) {
-					$ids[] = $modelVer[$i]->catalogoespecies_id;
+		if ($userRole == "editor"){
+			$modelUser	= CatalogoUser::model()->find('username = \''.Yii::app()->user->name.'\'');
+			if($modelUser){
+				if($modelUser->contacto_id != NULL){
+					$modelContacto = Contactos::model()->findByPk($modelUser->contacto_id);
+					$emailContacto = $modelContacto->correo_electronico;
+					$modelVer 	= Catalogoespecies::model()->with('verificacionce')->findAll('"verificacionce"."contacto_id"=:contactoId', array(':contactoId' => $emailContacto));
+					$ids		= array();
+					
+					if (count($modelVer) > 0) {
+						for ($i = 0; $i < count($modelVer); $i++) {
+							$ids[] = $modelVer[$i]->catalogoespecies_id;
+						}
+						$ids_st = implode(",", $ids);
+						$model->ids_filter = $ids_st;
+						$model2->ids_filter = $ids_st;
+						$model3->ids_filter = $ids_st;
+						$model4->ids_filter = $ids_st;
+					}
+					else {
+						$model->ids_filter	 = '0';
+						
+					}
 				}
-				$ids_st = implode(",", $ids);
-				$model->ids_filter = $ids_st;
-				$model2->ids_filter = $ids_st;
-				$model3->ids_filter = $ids_st;
-				$model4->ids_filter = $ids_st;
+				else{
+					$model->ids_filter	 = '0';
+				}
+				
 			}
 		}
 		

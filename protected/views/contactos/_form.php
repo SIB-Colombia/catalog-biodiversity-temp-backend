@@ -1,10 +1,11 @@
+<?php $basepath = Yii::app()->request->baseUrl;?>
 <script type="text/javascript">
 /*<![CDATA[*/
 jQuery(function($) {
-jQuery('body').on('change','#Contactos_idPais',function(){jQuery.ajax({'type':'POST','url':'/index.php/contactos/actualizarDepartamento','beforeSend':function(){
+jQuery('body').on('change','#Contactos_idPais',function(){jQuery.ajax({'type':'POST','url':'<?=$basepath;?>/index.php/contactos/actualizarDepartamento','beforeSend':function(){
 	            		$("#datos-pais-region-municipio").addClass("loading");},'complete':function(){
         	    		$("#datos-pais-region-municipio").removeClass("loading");},'cache':false,'data':jQuery(this).parents("form").serialize(),'success':function(html){jQuery("#Contactos_idDepartamentoEstadoProvincia").html(html)}});return false;});
-jQuery('body').on('change','#Contactos_idDepartamentoEstadoProvincia',function(){jQuery.ajax({'type':'POST','url':'/index.php/contactos/actualizarMunicipio','beforeSend':function(){
+jQuery('body').on('change','#Contactos_idDepartamentoEstadoProvincia',function(){jQuery.ajax({'type':'POST','url':'<?=$basepath;?>/index.php/contactos/actualizarMunicipio','beforeSend':function(){
 	            		$("#datos-pais-region-municipio").addClass("loading");},'complete':function(){
         	    		$("#datos-pais-region-municipio").removeClass("loading");},'cache':false,'data':jQuery(this).parents("form").serialize(),'success':function(html){jQuery("#Contactos_idMunicipio").html(html)}});return false;});
 

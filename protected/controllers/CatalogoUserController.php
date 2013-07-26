@@ -37,7 +37,7 @@ class CatalogoUserController extends Controller
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'roles'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -94,6 +94,7 @@ class CatalogoUserController extends Controller
 		if(isset($_POST['CatalogoUser']))
 		{
 			$model->attributes=$_POST['CatalogoUser'];
+			$model->password = $model->newpassword;
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->username));
 		}
@@ -122,9 +123,13 @@ class CatalogoUserController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('CatalogoUser');
+		$model=new CatalogoUser('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['CatalogoUser']))
+			$model->attributes=$_GET['CatalogoUser'];
+		
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'model'=>$model,
 		));
 	}
 

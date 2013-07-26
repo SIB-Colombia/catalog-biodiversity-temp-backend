@@ -111,7 +111,23 @@
 		<div class="row-fluid">
 			<div class="span2">
 				<div class="menu-izquierda">
-					<?php $this->widget('bootstrap.widgets.TbMenu', array(
+					<?php
+								
+					$userRole = Yii::app()->user->getState("roles");
+					$arr_title = array();
+					$arr_menu_user = array();
+					$arr_menu_user_new = array();
+					
+					if ($userRole === "admin") {
+						$arr_title = array('label' => 'USUARIOS');
+						$arr_menu_user = array('label' => 'Listado', 'icon' => 'icon-th-list', 'url' => array('catalogouser/index'));
+						$arr_menu_user_new = array('label' => 'Nuevo Usuario', 'icon' => 'icon-plus', 'url' => array('catalogouser/create'));
+					}
+					else{
+						$arr_title = array('label' => 'USUARIOS');
+						$arr_menu_user_new = array('label' => 'Editar Usuario', 'icon' => 'icon-plus', 'url' => array('catalogouser/update?id='.Yii::app()->user->name));
+					}
+					$this->widget('bootstrap.widgets.TbMenu', array(
 						'type'=>'list',
 						'items'=>array(
 							array('label'=>'FICHAS'),
@@ -123,6 +139,9 @@
 							array('label'=>'Nueva citación', 'icon'=>'icon-plus', 'url'=>array('citacion/create')),
 							array('label'=>'Exportar'),
 							array('label'=>'Plinian Core (Excel)', 'icon'=>'icon-download-alt', 'url'=>array('plinianCore/excelfullexport')),
+							$arr_title,
+							$arr_menu_user,
+							$arr_menu_user_new,
 							//array('label'=>'Plinian Core (PDF)', 'icon'=>'icon-download-alt', 'url'=>array('plinianCore/pdffullexport')),
 							//array('label'=>'Application', 'icon'=>'pencil', 'url'=>'#'),
 							//array('label'=>'EXPORTAR'),
