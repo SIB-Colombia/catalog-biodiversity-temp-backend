@@ -120,8 +120,8 @@
 					
 					if ($userRole === "admin") {
 						$arr_title = array('label' => 'USUARIOS');
-						$arr_menu_user = array('label' => 'Listado', 'icon' => 'icon-th-list', 'url' => array('catalogouser/index'));
-						$arr_menu_user_new = array('label' => 'Nuevo Usuario', 'icon' => 'icon-plus', 'url' => array('catalogouser/create'));
+						$arr_menu_user = array('label' => 'Listado', 'icon' => 'icon-th-list', 'url' => array('catalogoUser/index'));
+						$arr_menu_user_new = array('label' => 'Nuevo Usuario', 'icon' => 'icon-plus', 'url' => array('catalogoUser/create'));
 					}
 					else{
 						$arr_title = array('label' => 'USUARIOS');
