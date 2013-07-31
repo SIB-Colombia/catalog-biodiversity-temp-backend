@@ -117,15 +117,23 @@
 					$arr_title = array();
 					$arr_menu_user = array();
 					$arr_menu_user_new = array();
+					$arr_title_contact = array();
+					$arr_menu_contact = array();
+					$arr_title_export = array();
+					$arr_menu_export = array();
 					
 					if ($userRole === "admin") {
 						$arr_title = array('label' => 'USUARIOS');
 						$arr_menu_user = array('label' => 'Listado', 'icon' => 'icon-th-list', 'url' => array('catalogoUser/index'));
 						$arr_menu_user_new = array('label' => 'Nuevo Usuario', 'icon' => 'icon-plus', 'url' => array('catalogoUser/create'));
+						$arr_title_contact = array('label'=>'Contactos');
+						$arr_menu_contact	= array('label'=>'Nuevo contacto', 'icon'=>'icon-plus', 'url'=>array('contactos/create'));
+						$arr_title_export	= array('label'=>'Exportar');
+						$arr_menu_export	= array('label'=>'Plinian Core (Excel)', 'icon'=>'icon-download-alt', 'url'=>array('plinianCore/excelfullexport'));
 					}
 					else{
 						$arr_title = array('label' => 'USUARIOS');
-						$arr_menu_user_new = array('label' => 'Editar Usuario', 'icon' => 'icon-plus', 'url' => array('catalogouser/update?id='.Yii::app()->user->name));
+						$arr_menu_user_new = array('label' => 'Editar Usuario', 'icon' => 'icon-plus', 'url' => array('catalogoUser/update?id='.Yii::app()->user->name));
 					}
 					$this->widget('bootstrap.widgets.TbMenu', array(
 						'type'=>'list',
@@ -133,12 +141,12 @@
 							array('label'=>'FICHAS'),
 							array('label'=>'Listado', 'icon'=>'icon-th-list', 'url'=>array('catalogo/index')),
 							array('label'=>'Nueva ficha', 'icon'=>'icon-plus', 'url'=>array('catalogo/create')),
-							array('label'=>'Contactos'),
-							array('label'=>'Nuevo contacto', 'icon'=>'icon-plus', 'url'=>array('contactos/create')),
+							$arr_title_contact,
+							$arr_menu_contact,
 							array('label'=>'Citaciones'),
 							array('label'=>'Nueva citación', 'icon'=>'icon-plus', 'url'=>array('citacion/create')),
-							array('label'=>'Exportar'),
-							array('label'=>'Plinian Core (Excel)', 'icon'=>'icon-download-alt', 'url'=>array('plinianCore/excelfullexport')),
+							$arr_title_export,
+							$arr_menu_export,
 							$arr_title,
 							$arr_menu_user,
 							$arr_menu_user_new,

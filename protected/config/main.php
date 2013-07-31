@@ -61,8 +61,8 @@ return array(
 				array('api/list', 'pattern'=>'api/<model:\w+>', 'verb'=>'GET'),
 				array('api/carrusel', 'pattern'=>'api/fichas/<model:\w+>', 'verb'=>'GET'),
 				array('api/view', 'pattern'=>'api/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
-				'catalogouser/<action:\w+>'=>'catalogouser/<action>',
-				'catalogouser/<id:\w+>'=>'catalogouser/view',
+				'catalogoUser/<action:\w+>'=>'catalogoUser/<action>',
+				'catalogoUser/<id:\w+>'=>'catalogoUser/view',
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
@@ -80,7 +80,7 @@ return array(
 			//'password' => 'Lg2013-',
 			//'emulatePrepare' => true,
 			'username' => 'user', //actualizar usuario
-			'password' => 'pass', //actualizar password
+			'password' => 'password', //actualizar password
 			'charset' => 'utf8',
 			'emulatePrepare' => false,
 			'enableProfiling'=>true,
