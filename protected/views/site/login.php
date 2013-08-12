@@ -1,13 +1,22 @@
 <?php
 Yii::app()->theme = 'catalogo_empty';
 Yii::app()->clientScript->registerCssFile(Yii::app()->theme->baseUrl.'/css/login.css');
-
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl.'/js/md5.js', CClientScript::POS_HEAD);
+Yii::app()->clientScript->registerScriptFile(Yii::app()->theme->baseUrl.'/js/utf8_encode.js', CClientScript::POS_HEAD);
 $this->pageTitle=Yii::app()->name . ' - Ingreso';
 /*$this->breadcrumbs=array(
 	'Registro',
 );*/
 ?>
-
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#LoginForm_password").change(function (){
+		valor_p = $("#LoginForm_password").val();
+		valor_hash = md5(valor_p);
+		$("#LoginForm_password").val(valor_hash);
+		});
+	});
+</script>
 <div id="ingreso">
 <div class="form" align="center">
 <?php $form=$this->beginWidget('CActiveForm', array(

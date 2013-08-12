@@ -70,6 +70,12 @@ class CatalogoUserController extends Controller
 		if(isset($_POST['CatalogoUser']))
 		{
 			$model->attributes=$_POST['CatalogoUser'];
+			if($model->password === $model->password2){
+				$model->password	= md5($model->password);
+				$model->password	= crypt($model->password, self::blowfishSalt());
+				$model->password2	= $model->password;
+			}
+			
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->username));
 		}
@@ -95,6 +101,12 @@ class CatalogoUserController extends Controller
 		{
 			$model->attributes=$_POST['CatalogoUser'];
 			$model->password = $model->newpassword;
+			if($model->password === $model->password2){
+				$model->password	= md5($model->password);
+				$model->password	= crypt($model->password, self::blowfishSalt());
+				$model->newpassword = $model->password;
+				$model->password2	= $model->password;
+			}
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->username));
 		}
@@ -174,5 +186,29 @@ class CatalogoUserController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+	
+	/**
+	 * Generate a random salt in the crypt(3) standard Blowfish format.
+	 *
+	 * @param int $cost Cost parameter from 4 to 31.
+	 *
+	 * @throws Exception on invalid cost parameter.
+	 * @return string A Blowfish hash salt for use in PHP's crypt()
+	 */
+	function blowfishSalt($cost = 13){
+		if(!is_numeric($cost) || $cost < 4 || $cost > 13){
+			throw new Exception("El costo debe estar entre 4 y 31");
+		}
+		
+		$rand = array();
+		for ($i = 0; $i < 8; $i++) {
+			$rand[] = pack('S', mt_rand(0, 0xffff));
+		}
+		$rand[] = substr(microtime(), 2, 6);
+		$rand 	= sha1(implode('', $rand), true);
+		$salt	= '$2a$'.sprintf('%02d',$cost).'$';
+		$salt	.= strtr(substr(base64_encode($rand), 0, 22), array('+' => '.'));
+		return  $salt; 
 	}
 }

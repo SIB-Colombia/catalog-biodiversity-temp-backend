@@ -102,11 +102,11 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 		<?php 
 			$action = $this->action->id;
 			echo $form->textFieldRow($model, 'username', array('size'=>32,'maxlength'=>32, 'class'=>'textareaA')); 
-			echo $form->passwordFieldRow($model, 'password', array('size'=>32,'maxlength'=>32, 'class'=>'textareaA'));
+			echo $form->passwordFieldRow($model, 'password', array('size'=>64,'maxlength'=>64, 'class'=>'textareaA'));
 			if($action == "update"){
-				echo $form->passwordFieldRow($model, 'newpassword', array('size'=>32,'maxlength'=>32, 'class'=>'textareaA'));
+				echo $form->passwordFieldRow($model, 'newpassword', array('size'=>64,'maxlength'=>64, 'class'=>'textareaA'));
 			}
-			echo $form->passwordFieldRow($model, 'password2', array('size'=>32,'maxlength'=>32, 'class'=>'textareaA'));
+			echo $form->passwordFieldRow($model, 'password2', array('size'=>64,'maxlength'=>64, 'class'=>'textareaA'));
 			$disable = true;
 			if($userRole == "admin"){
 				$disable = false;

@@ -41,7 +41,8 @@ class CatalogoUser extends CActiveRecord
 		return array(
 			array('username, password,role,contacto_id', 'required'),
 			array('contacto_id', 'numerical', 'integerOnly'=>true),
-			array('username, password, password2, role', 'length', 'max'=>32),
+			array('username, role', 'length', 'max'=>32),
+			array('password, password2','length', 'max'=>64),
 			array('password', 'compare', 'compareAttribute'=>'password2', 'on'=>'insert'),
 			array('newpassword', 'compare', 'compareAttribute'=>'password2', 'on'=>'update'),
 			
