@@ -79,8 +79,8 @@ return array(
 			//'username' => 'lgrajales',
 			//'password' => 'Lg2013-',
 			//'emulatePrepare' => true,
-			'username' => 'user', //actualizar usuario
-			'password' => 'password', //actualizar password
+			'username' => 'valentina', //actualizar usuario
+			'password' => 'h4s1p8k21078!', //actualizar password
 			'charset' => 'utf8',
 			'emulatePrepare' => false,
 			'enableProfiling'=>true,
