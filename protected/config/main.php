@@ -74,13 +74,10 @@ return array(
 		),*/
 		// uncomment the following to use a Postgres database
 		'db'=>array(
-			'connectionString' => 'pgsql:host=localhost;port=5432;dbname=catalogobiodiversidad',
-			//'connectionString' => 'pgsql:host=74.3.218.90;port=5432;dbname=catalogo',
-			//'username' => 'lgrajales',
-			//'password' => 'Lg2013-',
+			'connectionString' => 'pgsql:host='+getenv('CATALOG_BACKEND_DBHOST')+';port=5432;dbname='+getenv('CATALOG_BACKEND_DBNAME'),
 			//'emulatePrepare' => true,
-			'username' => 'valentina', //actualizar usuario
-			'password' => 'h4s1p8k21078!', //actualizar password
+			'username' => getenv('CATALOG_BACKEND_USERNAME'), //actualizar usuario
+			'password' => getenv('CATALOG_BACKEND_USERPASSWORD'), //actualizar password
 			'charset' => 'utf8',
 			'emulatePrepare' => false,
 			'enableProfiling'=>true,
