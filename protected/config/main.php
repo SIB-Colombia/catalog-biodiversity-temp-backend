@@ -74,7 +74,7 @@ return array(
 		),*/
 		// uncomment the following to use a Postgres database
 		'db'=>array(
-			'connectionString' => 'pgsql:host='+getenv('CATALOG_BACKEND_DBHOST')+';port=5432;dbname='+getenv('CATALOG_BACKEND_DBNAME'),
+			'connectionString' => 'pgsql:host='.getenv('CATALOG_BACKEND_DBHOST').';port=5432;dbname='.getenv('CATALOG_BACKEND_DBNAME'),
 			//'emulatePrepare' => true,
 			'username' => getenv('CATALOG_BACKEND_USERNAME'), //actualizar usuario
 			'password' => getenv('CATALOG_BACKEND_USERPASSWORD'), //actualizar password
