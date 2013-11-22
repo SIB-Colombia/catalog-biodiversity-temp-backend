@@ -167,7 +167,6 @@ class PcdepartamentosCeController extends Controller
 					try {
 						$nuevoDepartamento->validate();
 						yii::log(var_dump($nuevoDepartamento->getErrors()));
-						yii::log($nuevoDepartamento->getErrors());
 						($nuevoDepartamento->save(false) == true) ? $successCount++ : $failureCount++;
 						$transaction->commit();
 					} catch (Exception $e) {

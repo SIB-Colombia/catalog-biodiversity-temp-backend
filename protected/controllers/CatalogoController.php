@@ -100,7 +100,6 @@ class CatalogoController extends Controller
 				$datosTaxonomicos=new PcaatCe();
 				$model->validate();
 				yii::log(var_dump($model->getErrors()));
-				yii::log($model->getErrors());
 				
 				$success_saving_all = true;
 				
@@ -127,7 +126,6 @@ class CatalogoController extends Controller
 					
 					$verificacion->validate();
 					yii::log(var_dump($verificacion->getErrors()));
-					yii::log($verificacion->getErrors());
 					$verificacion->save(false);
 					
 					$model->verificacionce=$verificacion;
@@ -141,7 +139,6 @@ class CatalogoController extends Controller
 					$datosTaxonomicos->paginaweb=$model->paginaWeb;
 					$datosTaxonomicos->validate();
 					yii::log(var_dump($datosTaxonomicos->getErrors()));
-					yii::log($datosTaxonomicos->getErrors());
 					$datosTaxonomicos->save(false);
 					$model->pcaatCe=$datosTaxonomicos;
 					
@@ -515,7 +512,6 @@ class CatalogoController extends Controller
 			
 			$model->validate();
 			yii::log(var_dump($model->getErrors()));
-			yii::log($model->getErrors());
 				
 			$success_saving_all = true;
 				
@@ -545,7 +541,6 @@ class CatalogoController extends Controller
 				
 				$model->validate();
 				yii::log(var_dump($model->getErrors()));
-				yii::log($model->getErrors());
 				
 				$model->verificacionce->save(false);
 				$model->pcaatCe->save(false);

@@ -167,7 +167,6 @@ class PccorporacionesCeController extends Controller
 					try {
 						$nuevaCorporacion->validate();
 						yii::log(var_dump($nuevaCorporacion->getErrors()));
-						yii::log($nuevaCorporacion->getErrors());
 						($nuevaCorporacion->save(false) == true) ? $successCount++ : $failureCount++;
 						$transaction->commit();
 					} catch (Exception $e) {

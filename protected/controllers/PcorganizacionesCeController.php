@@ -167,7 +167,6 @@ class PcorganizacionesCeController extends Controller
 					try {
 						$nuevaOrganizacion->validate();
 						yii::log(var_dump($nuevaOrganizacion->getErrors()));
-						yii::log($nuevaOrganizacion->getErrors());
 						($nuevaOrganizacion->save(false) == true) ? $successCount++ : $failureCount++;
 						$transaction->commit();
 					} catch (Exception $e) {

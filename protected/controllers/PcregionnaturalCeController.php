@@ -167,7 +167,6 @@ class PcregionnaturalCeController extends Controller
 					try {
 						$nuevaRegionNatural->validate();
 						yii::log(var_dump($nuevaRegionNatural->getErrors()));
-						yii::log($nuevaRegionNatural->getErrors());
 						($nuevaRegionNatural->save(false) == true) ? $successCount++ : $failureCount++;
 						$transaction->commit();
 					} catch (Exception $e) {
