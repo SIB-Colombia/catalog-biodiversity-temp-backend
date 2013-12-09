@@ -81,8 +81,8 @@ class ApiController extends Controller
 								if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension)) {
 									$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension, 140, 140, 1);
 								}
-								$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://administracion.biodiversidad.co'.Yii::app()->request->baseUrl.'/imagen/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension;
-								$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://administracion.biodiversidad.co'.'/imagen/'.$imagen;
+								$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_140x140.'.$extension;
+								$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
 								$counterArray++;
 							}
 						}
@@ -105,6 +105,7 @@ class ApiController extends Controller
 		switch($_GET['model'])
 		{
 			case 'fichas':
+			case 'fichasresumen':
 				if(isset($_GET['page'])) {
 					$offset = ($_GET['page'] - 1) * 20;
 					$condition= new CDbCriteria();
@@ -149,16 +150,19 @@ class ApiController extends Controller
 					}
 					if(isset($_GET['orderdirection'])) {
 						if($_GET['orderdirection'] == "asc") {
-							$condition->order = 	$condition->order." ASC";
+							$condition->order = $condition->order." ASC";
 						} else {
-							$condition->order = 	$condition->order." DESC";
+							$condition->order = $condition->order." DESC";
 						}
 					} else {
-						$condition->order = 	$condition->order." DESC";
+						$condition->order = $condition->order." DESC";
 					}
 					$condition->limit=20;
 					$condition->offset=$offset;
 					$models = Catalogoespecies::model()->findAll($condition);
+					$condition->limit=null;
+					$condition->offset=null;
+					$countreg = Catalogoespecies::model()->count($condition);
 				} else {
 					// Model not implemented error
 					$this->_sendResponse(501, sprintf(
@@ -181,66 +185,163 @@ class ApiController extends Controller
 		} else {
 			// Prepare response
 			$rows = array();
-			foreach($models as $model) {
-				$rows[$model->catalogoespecies_id] = $model->attributes;
-				if(isset($model->pcaatCe)) {
-					$rows[$model->catalogoespecies_id]["info_taxonomica"] = $model->pcaatCe->attributes;
-				}
-				if(isset($model->contacto)) {
-					$rows[$model->catalogoespecies_id]["contacto"] = $model->contacto->attributes;
-					if(isset($model->contacto->idReferenteGeografico)) {
-						$rows[$model->catalogoespecies_id]["contacto"]["pais"] = $model->contacto->idReferenteGeografico->idPais->paisAbreviatura->paisAbreviatura->pais_nombre;
-						$rows[$model->catalogoespecies_id]["contacto"]["departamento_estado_provincia"] = $model->contacto->idReferenteGeografico->idSub->subAbreviatura->sub_nombre;
-						$rows[$model->catalogoespecies_id]["contacto"]["municipio"] = $model->contacto->idReferenteGeografico->idCm->ciudad_municipio_nombre;
+			if($_GET['model'] == "fichasresumen") {
+				$rows["data"] = [];
+				$rows["total_fichas"] = $countreg;
+				$counter = 0;
+				foreach($models as $model) {
+					$rows["data"][$counter]["id"] = $model->catalogoespecies_id;
+					$rows["data"][$counter]["taxon_nombre"] = ($model->pcaatCe->taxonnombre != "" ? $model->pcaatCe->taxonnombre : null);
+					$rows["data"][$counter]["autor"] = ($model->pcaatCe->autor != "" ? $model->pcaatCe->autor : null);
+					if (preg_match('/Reino(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["reino"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
 					}
-				}
-				if(isset($model->pctesaurosCes)) {
-					$nombresComunes=$model->pctesaurosCes;
-					foreach($nombresComunes as $nombreComun) {
-						$rows[$model->catalogoespecies_id]["nombres_comunes"][]=$nombreComun->attributes;
+					if (preg_match('/Phylum(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["phylum"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
 					}
-				}
-				if(isset($model->pcdepartamentosCes)) {
-					$departamentos=$model->pcdepartamentosCes;
-					foreach($departamentos as $departamento) {
-						$rows[$model->catalogoespecies_id]["distribucion_geografica"]["departamentos"][]=$departamento->departamento->departamento;
+					if (preg_match('/Clase(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["clase"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
 					}
-				}
-				if(isset($model->pcorganizacionesCes)) {
-					$organizaciones=$model->pcorganizacionesCes;
-					foreach($organizaciones as $organizacio) {
-						$rows[$model->catalogoespecies_id]["distribucion_geografica"]["organizaciones"][]=$organizacio->organizacion->organizacion;
+					if (preg_match('/Orden(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["orden"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
 					}
-				}
-				if(isset($model->ceAtributovalors)) {
-					$atributos=$model->ceAtributovalors;
-					foreach($atributos as $atributo) {
-						if(isset($atributo->atributo)) {
-							if($atributo->atributo->nombre == "Imagen") {
-								$rows[$model->catalogoespecies_id]["atributos"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+					if (preg_match('/Familia(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["familia"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}
+					if (preg_match('/Género(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}
+					if(preg_match('/Genero(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}
+					if (preg_match('/Especie(.*)/is', $model->pcaatCe->taxoncompleto, $matches)) {
+						$rows["data"][$counter]["especie"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}
+					if(isset($model->pctesaurosCes)) {
+						$nombresComunes=$model->pctesaurosCes;
+						$rows["data"][$counter]["nombres_comunes"] = [];
+						$counterNombreComun = 0;
+						foreach($nombresComunes as $nombreComun) {
+							$rows["data"][$counter]["nombres_comunes"][$counterNombreComun]["nombre"] = ($nombreComun->tesauronombre != "" ? $nombreComun->tesauronombre : null);
+							$rows["data"][$counter]["nombres_comunes"][$counterNombreComun]["idioma"] = ($nombreComun->idioma != "" ? $nombreComun->idioma : null);
+							$rows["data"][$counter]["nombres_comunes"][$counterNombreComun]["region_geografica"] = ($nombreComun->regionesgeograficas != "" ? $nombreComun->regionesgeograficas : null);
+							$counterNombreComun++;
+						}
+					}
+					if(isset($model->pcdepartamentosCes)) {
+						$departamentos=$model->pcdepartamentosCes;
+						$rows["data"][$counter]["departamentos"] = [];
+						$counterDepartamento = 0;
+						foreach($departamentos as $departamento) {
+							$rows["data"][$counter]["departamentos"][$counterDepartamento]["departamento"] = ($departamento->departamento->departamento != "" ? $departamento->departamento->departamento : null);
+							$counterDepartamento++;
+						}
+					}
+					if(isset($model->ceAtributovalors)) {
+						$atributos=$model->ceAtributovalors;
+						$rows["data"][$counter]["imagenes"]["imagen"] = [];
+						$counterImagen = 0;
+						foreach($atributos as $atributo) {
+							if(isset($atributo->atributo)) {
+								if($atributo->atributo->nombre == "Imagen") {
+									$rows["data"][$counter]["imagenes"]["imagen"][$counterImagen] = $atributo->valor0->valor;
+									$counterImagen++;
+								}
 							}
 						}
 					}
+					if(isset($rows["data"][$counter]["imagenes"]["imagen"])) {
+						$counterArray=0;
+						foreach ($rows["data"][$counter]["imagenes"]["imagen"] as $imagen) {
+							$images_path = $_SERVER['DOCUMENT_ROOT'].'/imagen';
+							$extension = end(explode('.', $imagen));
+							$filename = current(explode('.', $imagen));
+							if (!is_dir($images_path.'/resampled/'.$model->catalogoespecies_id)) {
+								mkdir($images_path.'/resampled/'.$model->catalogoespecies_id, 0755, true);
+							}
+							if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
+								$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension, 140, 140, 1);
+							}
+							if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
+								$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension, 270, 270, 1);
+							}
+							//$rows["data"][$counter]["imagenes"]["imagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_140x140.'.$extension;
+							//$rows["data"][$counter]["imagenes"]["imagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_270x270.'.$extension;
+							//$rows["data"][$counter]["imagenes"]["imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
+							if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
+								$rows["data"][$counter]["imagenes"]["imagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_140x140.'.$extension;
+							}
+							if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
+								$rows["data"][$counter]["imagenes"]["imagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_270x270.'.$extension;
+							}
+							$rows["data"][$counter]["imagenes"]["imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
+							$counterArray++;
+						}
+					}
+					$counter++;
 				}
-				if(isset($rows[$model->catalogoespecies_id]["atributos"]["Imagen"])) {
-					$counterArray=0;
-					foreach ($rows[$model->catalogoespecies_id]["atributos"]["Imagen"] as $imagen) {
-						$images_path = $_SERVER['DOCUMENT_ROOT'].'/imagen';
-						$extension = end(explode('.', $imagen));
-						$filename = current(explode('.', $imagen));
-						if (!is_dir($images_path.'/resampled/'.$model->catalogoespecies_id)) {
-							mkdir($images_path.'/resampled/'.$model->catalogoespecies_id, 0755, true);
+			} else if($_GET['model'] == "fichas") {
+				foreach($models as $model) {
+					$rows[$model->catalogoespecies_id] = $model->attributes;
+					if(isset($model->pcaatCe)) {
+						$rows[$model->catalogoespecies_id]["info_taxonomica"] = $model->pcaatCe->attributes;
+					}
+					if(isset($model->contacto)) {
+						$rows[$model->catalogoespecies_id]["contacto"] = $model->contacto->attributes;
+						if(isset($model->contacto->idReferenteGeografico)) {
+							$rows[$model->catalogoespecies_id]["contacto"]["pais"] = $model->contacto->idReferenteGeografico->idPais->paisAbreviatura->paisAbreviatura->pais_nombre;
+							$rows[$model->catalogoespecies_id]["contacto"]["departamento_estado_provincia"] = $model->contacto->idReferenteGeografico->idSub->subAbreviatura->sub_nombre;
+							$rows[$model->catalogoespecies_id]["contacto"]["municipio"] = $model->contacto->idReferenteGeografico->idCm->ciudad_municipio_nombre;
 						}
-						if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension)) {
-							$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension, 140, 140, 1);
+					}
+					if(isset($model->pctesaurosCes)) {
+						$nombresComunes=$model->pctesaurosCes;
+						foreach($nombresComunes as $nombreComun) {
+							$rows[$model->catalogoespecies_id]["nombres_comunes"][]=$nombreComun->attributes;
 						}
-						if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension)) {
-							$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension, 270, 270, 1);
+					}
+					if(isset($model->pcdepartamentosCes)) {
+						$departamentos=$model->pcdepartamentosCes;
+						foreach($departamentos as $departamento) {
+							$rows[$model->catalogoespecies_id]["distribucion_geografica"]["departamentos"][]=$departamento->departamento->departamento;
 						}
-						$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://administracion.biodiversidad.co.co'.Yii::app()->request->baseUrl.'/imagen/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension;
-						$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb270"][$counterArray] = 'http://administracion.biodiversidad.co'.Yii::app()->request->baseUrl.'/imagen/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension;
-						$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://administracion.biodiversidad.co'.'/imagen/'.$imagen;
-						$counterArray++;
+					}
+					if(isset($model->pcorganizacionesCes)) {
+						$organizaciones=$model->pcorganizacionesCes;
+						foreach($organizaciones as $organizacio) {
+							$rows[$model->catalogoespecies_id]["distribucion_geografica"]["organizaciones"][]=$organizacio->organizacion->organizacion;
+						}
+					}
+					if(isset($model->ceAtributovalors)) {
+						$atributos=$model->ceAtributovalors;
+						foreach($atributos as $atributo) {
+							if(isset($atributo->atributo)) {
+								if($atributo->atributo->nombre == "Imagen") {
+									$rows[$model->catalogoespecies_id]["atributos"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+								}
+							}
+						}
+					}
+					if(isset($rows[$model->catalogoespecies_id]["atributos"]["Imagen"])) {
+						$counterArray=0;
+						foreach ($rows[$model->catalogoespecies_id]["atributos"]["Imagen"] as $imagen) {
+							$images_path = $_SERVER['DOCUMENT_ROOT'].'/imagen';
+							$extension = end(explode('.', $imagen));
+							$filename = current(explode('.', $imagen));
+							if (!is_dir($images_path.'/resampled/'.$model->catalogoespecies_id)) {
+								mkdir($images_path.'/resampled/'.$model->catalogoespecies_id, 0755, true);
+							}
+							if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension)) {
+								$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension, 140, 140, 1);
+							}
+							if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension)) {
+								$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension, 270, 270, 1);
+							}
+							$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_140x140.'.$extension;
+							$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_270x270.'.$extension;
+							$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
+							$counterArray++;
+						}
 					}
 				}
 			}
@@ -418,6 +519,30 @@ class ApiController extends Controller
 			$rows[$model->catalogoespecies_id] = $model->attributes;
 			if(isset($model->pcaatCe)) {
 				$rows[$model->catalogoespecies_id]["info_taxonomica"] = $model->pcaatCe->attributes;
+				if (preg_match('/Reino(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["reino"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Phylum(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["phylum"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Clase(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["clase"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Orden(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["orden"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Familia(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["familia"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Género(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if(preg_match('/Genero(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Especie(.*)/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows[$model->catalogoespecies_id]["especie"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
 			}
 			if(isset($model->contacto)) {
 				$rows[$model->catalogoespecies_id]["contacto"] = $model->contacto->attributes;
@@ -514,6 +639,7 @@ class ApiController extends Controller
 					}
 				}
 			}
+
 			// Send the response
 			//$this->_sendResponse(200, CJSON::encode($rows));
 			if(isset($rows[$model->catalogoespecies_id]["atributos"]["Imagen"])) {
@@ -525,14 +651,25 @@ class ApiController extends Controller
 					if (!is_dir($images_path.'/resampled/'.$model->catalogoespecies_id)) {
 						mkdir($images_path.'/resampled/'.$model->catalogoespecies_id, 0755, true);
 					}
-					if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension)) {
-						$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension, 140, 140, 1);
+					if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
+						$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension, 140, 140, 1);
 					}
-					if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension)) {
-						$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension, 270, 270, 1);
+					if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
+						$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension, 270, 270, 1);
 					}
-					$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://administracion.biodiversidad.co'.Yii::app()->request->baseUrl.'/imagen/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension;
-					$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://administracion.biodiversidad.co'.'/imagen/'.$imagen;
+					if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_370x370.'.$extension)) {
+						$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_370x370.'.$extension, 370, 370, 1);
+					}
+					if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
+						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_140x140.'.$extension;
+					}
+					if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
+						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_270x270.'.$extension;
+					}
+					if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_370x370.'.$extension)) {
+						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb370"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_370x370.'.$extension;
+					}
+					$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
 					$counterArray++;
 				}
 			}
@@ -555,6 +692,14 @@ class ApiController extends Controller
 				$body = $_GET['callback'].'('.$body.')';
 			} else {
 				$body = $_GET['callback'].'('.$body.')';
+			}
+		}
+
+		if(isset($_GET['jsonp'])) {
+			if($this->_is_valid_callback($_GET['jsonp'])) {
+				$body = $_GET['jsonp'].'('.$body.')';
+			} else {
+				$body = $_GET['jsonp'].'('.$body.')';
 			}
 		}
 	
