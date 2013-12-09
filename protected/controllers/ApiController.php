@@ -81,8 +81,8 @@ class ApiController extends Controller
 								if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension)) {
 									$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_140x140.'.$extension, 140, 140, 1);
 								}
-								$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_140x140.'.$extension;
-								$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
+								$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_140x140.'.$extension;
+								$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/'.rawurlencode($imagen);
 								$counterArray++;
 							}
 						}
@@ -269,12 +269,12 @@ class ApiController extends Controller
 							//$rows["data"][$counter]["imagenes"]["imagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_270x270.'.$extension;
 							//$rows["data"][$counter]["imagenes"]["imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
 							if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
-								$rows["data"][$counter]["imagenes"]["imagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_140x140.'.$extension;
+								$rows["data"][$counter]["imagenes"]["imagenThumb140"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_140x140.'.$extension;
 							}
 							if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
-								$rows["data"][$counter]["imagenes"]["imagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_270x270.'.$extension;
+								$rows["data"][$counter]["imagenes"]["imagenThumb270"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_270x270.'.$extension;
 							}
-							$rows["data"][$counter]["imagenes"]["imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
+							$rows["data"][$counter]["imagenes"]["imagen"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/'.rawurlencode($imagen);
 							$counterArray++;
 						}
 					}
@@ -337,9 +337,9 @@ class ApiController extends Controller
 							if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension)) {
 								$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.$filename.'_270x270.'.$extension, 270, 270, 1);
 							}
-							$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_140x140.'.$extension;
-							$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_270x270.'.$extension;
-							$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
+							$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb140"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_140x140.'.$extension;
+							$rows[$model->catalogoespecies_id]["atributos"]["ImagenThumb270"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode($filename).'_270x270.'.$extension;
+							$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/'.rawurlencode($imagen);
 							$counterArray++;
 						}
 					}
@@ -661,15 +661,15 @@ class ApiController extends Controller
 						$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_370x370.'.$extension, 370, 370, 1);
 					}
 					if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
-						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb140"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_140x140.'.$extension;
+						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb140"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_140x140.'.$extension;
 					}
 					if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
-						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb270"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_270x270.'.$extension;
+						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb270"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_270x270.'.$extension;
 					}
 					if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_370x370.'.$extension)) {
-						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb370"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_370x370.'.$extension;
+						$rows[$model->catalogoespecies_id]["atributos"]["imagenThumb370"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_370x370.'.$extension;
 					}
-					$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://'.$_SERVER['HTTP_HOST'].'/imagen/'.rawurlencode($imagen);
+					$rows[$model->catalogoespecies_id]["atributos"]["Imagen"][$counterArray] = 'http://administracion.biodiversidad.co/imagen/'.rawurlencode($imagen);
 					$counterArray++;
 				}
 			}
