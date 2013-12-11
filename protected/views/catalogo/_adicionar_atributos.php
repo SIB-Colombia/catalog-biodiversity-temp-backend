@@ -24,6 +24,12 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 		dataObject["idCatalog"] = <?php echo $idCatalogo; ?>;
 		dataObject["value"] = $('#attribute').val();
 		dataObject["attributeName"] = $('#Atributos_tipoAtributo option:selected').text();
+		if(dataObject["attributeName"] == "Estado de amenaza según categorías UICN") {
+			dataObject["colombia"] = $('#estado-amenaza-categorias-uicn-colombia').is(':checked');
+			dataObject["mundo"] = $('#estado-amenaza-categorias-uicn-mundo').is(':checked');
+			dataObject["selectedColombia"] = $('#estado-amenaza-categorias-uicn-colombia-selection').val();
+			dataObject["selectedMundo"] = $('#estado-amenaza-categorias-uicn-mundo-selection').val();
+		}
 		$.ajax({
 			url: <?php echo "'".Yii::app()->createUrl("atributovalor/create").'/'.$idCatalogo."'";?>,
 			type: 'post',

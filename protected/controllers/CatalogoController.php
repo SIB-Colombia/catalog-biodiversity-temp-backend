@@ -267,6 +267,8 @@ class CatalogoController extends Controller
 		
 		$atributos["Distribución altitudinal"]=array(); // 1
 		$atributos["Estado de amenaza según categorías UICN"]=array(); // 2
+		$atributos["Estado de amenaza según categorías UICN"]["En Colombia"]=array(); // 3
+		$atributos["Estado de amenaza según categorías UICN"]["En el mundo"]=array(); // 4
 		$atributos["Estado CITES"]=array(); // 5
 		$atributos["Factores de amenaza"]=array(); // 6
 		$atributos["Estado actual de la población"]=array(); // 7
@@ -321,11 +323,11 @@ class CatalogoController extends Controller
 			} else if($ceAtributoValor->etiqueta == "3") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
-				$atributos["Estado de amenaza según categorías UICN"]["En Colombia"] = array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor);
+				array_push($atributos["Estado de amenaza según categorías UICN"]["En Colombia"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 			} else if($ceAtributoValor->etiqueta == "4") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
-				$atributos["Estado de amenaza según categorías UICN"]["En el mundo"] = array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor);
+				array_push($atributos["Estado de amenaza según categorías UICN"]["En el mundo"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 			} else if($ceAtributoValor->etiqueta == "5") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
@@ -581,9 +583,13 @@ class CatalogoController extends Controller
 	{
 		if(isset($_GET["ajax"]))
 		{
-			if(isset($_GET["idAtributo"])) {
-				$ceAttributeValue = CeAtributovalor::model()->findByAttributes(array('valor'=>$_GET["idAtributo"]))->delete();
-				$attributeValue= Atributovalor::model()->findByPk($_GET["idAtributo"])->delete();
+			if(isset($_GET["atributovalor_id"]) && isset($_GET["idAtributo"])) {
+				$ceAttributeValue = CeAtributovalor::model()->findByAttributes(array('ceatributovalor_id'=>$_GET["atributovalor_id"], 'valor'=>$_GET["idAtributo"]))->delete();
+			} else {
+				if(isset($_GET["idAtributo"])) {
+					$ceAttributeValue = CeAtributovalor::model()->findByAttributes(array('valor'=>$_GET["idAtributo"]))->delete();
+					$attributeValue= Atributovalor::model()->findByPk($_GET["idAtributo"])->delete();
+				}
 			}
 		}
 	}

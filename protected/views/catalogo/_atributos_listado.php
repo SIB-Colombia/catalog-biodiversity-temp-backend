@@ -15,7 +15,7 @@
 			'title' => 'Autor(es)',
     		'headerIcon' => 'icon-th-list',
     		// when displaying a table, if we include bootstra-widget-table class
-    		// the table will be 0-padding to the box
+    		// the table will be 0-padding to the boxhttp://www.humboldt.org.co/
     		'htmlOptions' => array('class'=>'bootstrap-widget-table'),
     	));?>
     	<?php echo $this->renderPartial('//catalogo/_atributos_autores_asignados_ficha_update_table', array('autores'=>$atributos["Autor(es)"], 'idCatalogo'=>$model->catalogoespecies_id)); ?>
@@ -201,6 +201,18 @@
     	<?php echo $this->renderPartial('//catalogo/_atributos_estado_cites_asignados_ficha_update_table', array('estadoCites'=>$atributos["Estado CITES"], 'idCatalogo'=>$model->catalogoespecies_id)); ?>
     	<?php $this->endWidget();?>
     	<?php } ?> <!-- Fin Estado CITES -->
+
+        <?php if (!empty($atributos["Estado de amenaza según categorías UICN"])) { ?>
+        <?php $box = $this->beginWidget('bootstrap.widgets.TbBox', array(
+            'title' => 'Estado de amenaza según categorías UICN',
+            'headerIcon' => 'icon-th-list',
+            // when displaying a table, if we include bootstra-widget-table class
+            // the table will be 0-padding to the box
+            'htmlOptions' => array('class'=>'bootstrap-widget-table'),
+        ));?>
+        <?php echo $this->renderPartial('//catalogo/_atributos_estado_amenaza_categorias_uicn_asignados_ficha_update_table', array('estadoAmenazaCategoriasUICN'=>$atributos["Estado de amenaza según categorías UICN"], 'idCatalogo'=>$model->catalogoespecies_id)); ?>
+        <?php $this->endWidget();?>
+        <?php } ?> <!-- Fin Estado Estado de amenaza según categorías UICN -->
     	
     	<?php if (!empty($atributos["Etimología del nombre científico"])) { ?>
     	<?php $box = $this->beginWidget('bootstrap.widgets.TbBox', array(

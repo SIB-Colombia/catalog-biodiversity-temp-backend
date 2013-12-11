@@ -1,4 +1,5 @@
 <?php
+//yii::log(CVarDumper::dumpAsString($alimentacion), CLogger::LEVEL_INFO);
 $dataProvider = new CArrayDataProvider($alimentacion, array(
 	'keyField'=>'valor',
 	'sort'=>array(
