@@ -22,4 +22,4 @@ $this->widget('bootstrap.widgets.TbButtonGroup', array(
 
 <h1>Modificar ficha ID: <?php echo $model->catalogoespecies_id; ?>, <?php echo $model->pcaatCe->taxonnombre; ?> (<?php echo $model->pcaatCe->autor; ?>)</h1>
 
-<?php echo $this->renderPartial('_form_modificar', array('model'=>$model,'citaciones'=>$citaciones, 'contactos'=>$contactos, 'nombresComunes'=>$nombresComunes, 'departamentos'=>$departamentos, 'corporaciones'=>$corporaciones, 'regionesNaturales'=>$regionesNaturales, 'organizaciones'=>$organizaciones, 'atributos'=>$atributos, 'attributeReferenciasBibliograficas'=>$attributeReferenciasBibliograficas)); ?>
+<?php echo $this->renderPartial('_form_modificar', array('model'=>$model,'citaciones'=>$citaciones, 'contactos'=>$contactos, 'nombresComunes'=>$nombresComunes, 'departamentos'=>$departamentos, 'corporaciones'=>$corporaciones, 'regionesNaturales'=>$regionesNaturales, 'organizaciones'=>$organizaciones, 'atributos'=>$atributos)); ?>

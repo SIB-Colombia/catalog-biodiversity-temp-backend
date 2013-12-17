@@ -175,6 +175,7 @@ class CatalogoController extends Controller
 		$citaciones= new Citacion('search');
 		$attributeReferenciasBibliograficas= new Citacion('search');
 		$contactos= new Contactos('search');
+		$attributeContactos= new Contactos('search');
 		$nombresComunes=new PctesaurosCe('search'); // Lista de nombres comunes disponibles
 		$departamentos=new Departamentos('search'); // Lista de departamentos
 		$corporaciones=new Corporaciones('search'); // Lista de corporaciones
@@ -200,6 +201,11 @@ class CatalogoController extends Controller
 					$attributeReferenciasBibliograficas->attributes=$_GET['Citacion'];
 				$this->renderPartial('_referencias_bibliograficas_update_table', array('attributeReferenciasBibliograficas' => $attributeReferenciasBibliograficas));
 				Yii::app()->end();
+			} else if($_GET['ajax'] === "attribute-contactos-grid") {
+				if(isset($_GET['Contactos']))
+					$attributeContactos->attributes=$_GET['Contactos'];
+				$this->renderPartial('_contactos_attribute_update_table', array('contactosAttribute'=>$attributeContactos));
+				Yii::app()->end();				
 			} else if($_GET['ajax'] === "contactos-grid") {
 				if(isset($_GET['Contactos']))
 					$contactos->attributes=$_GET['Contactos'];
@@ -243,7 +249,6 @@ class CatalogoController extends Controller
 	{
 		$model=$this->loadModel($id);
 		$citaciones= new Citacion('search');
-		$attributeReferenciasBibliograficas= new Citacion('search');
 		$contactos= new Contactos('search');
 		$nombresComunes=new PctesaurosCe('search'); // Lista de nombres comunes disponibles
 		$departamentos=new Departamentos('search'); // Lista de departamentos disponibles
@@ -582,8 +587,7 @@ class CatalogoController extends Controller
 			'corporaciones'=>$corporaciones,
 			'regionesNaturales'=>$regionesNaturales,
 			'organizaciones'=>$organizaciones,
-			'atributos'=>$atributos,
-			'attributeReferenciasBibliograficas'=>$attributeReferenciasBibliograficas
+			'atributos'=>$atributos
 		));
 	}
 	

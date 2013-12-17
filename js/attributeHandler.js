@@ -1,5 +1,6 @@
 $("#Atributos_tipoAtributo").change(function() {
    $("#form_referencias_bibliograficas_attribute").addClass("hide-element");
+   $("#form_creditos_attribute").addClass("hide-element");
 	var originalString = this.value;
    	var stringExploded = originalString.split(":");
    	if(stringExploded[1] == 'text') {
@@ -115,6 +116,22 @@ $("#Atributos_tipoAtributo").change(function() {
          if(stringExploded[0] == 28) {
             $("#form-attibute-selected").html('');
             $("#form_referencias_bibliograficas_attribute").removeClass("hide-element");
+         }
+         if(stringExploded[0] == 19) {
+            $("#form-attibute-selected").html('');
+            $("#form_creditos_attribute").removeClass("hide-element");
+         }
+         if(stringExploded[0] == 20) {
+            $("#form-attibute-selected").html('');
+            $("#form_creditos_attribute").removeClass("hide-element");
+         }
+         if(stringExploded[0] == 24) {
+            $("#form-attibute-selected").html('');
+            $("#form_creditos_attribute").removeClass("hide-element");
+         }
+         if(stringExploded[0] == 25) {
+            $("#form-attibute-selected").html('');
+            $("#form_creditos_attribute").removeClass("hide-element");
          }
          $("#btnGuardarAtributo").show();
          $("#btnCancelarGuardarAtributo").show();

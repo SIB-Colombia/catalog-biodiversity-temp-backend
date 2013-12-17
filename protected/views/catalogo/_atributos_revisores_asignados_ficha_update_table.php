@@ -26,21 +26,12 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     	array( 'name'=>'Nombre', 'value'=>'$data["contenido"]', 'type'=>'raw'),
 		array(
     		'class'=>'bootstrap.widgets.TbButtonColumn',
-    		'template'=>'{update}{delete}',
+    		'template'=>'{delete}',
     		'htmlOptions'=>array('style'=>'width: 50px'),
     		'buttons'=>array (
-    			'update' => array (
-    				'label'=>'Modificar',
-    				'url'=>'Yii::app()->createUrl("atributovalor/update", array("id"=>$data["valor"]))',
-    				'options'=>array(
-    					'onClick'=>'callAjaxUpdateAttribute($(this).parent().parent().children(":nth-child(1)").text(), "atributo-revisores-asignados-grid");',
-    					'data-toggle' => 'modal',
-    					'data-target' => '#editarAtributoModal',
-    				),
-    			),
     			'delete' => array (
     				'label'=>'Borrar',
-    				'url'=>'Yii::app()->createUrl("/catalogo/deleteattribute", array("idAtributo"=>$data["valor"]))',
+    				'url'=>'Yii::app()->createUrl("/catalogo/deleteattribute", array("idAtributo"=>$data["valor"], "atributovalor_id"=>$data["ceatributovalor_id"]))',
     			),
     		),
     	),

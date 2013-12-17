@@ -130,9 +130,13 @@ class AtributovalorController extends Controller
 						));
 						exit;
 					}
-				} else if($_POST['labelAttribute'] == 28) {
+				} else if($_POST['labelAttribute'] == 28 || $_POST['labelAttribute'] == 19 || $_POST['labelAttribute'] == 20 || $_POST['labelAttribute'] == 24 || $_POST['labelAttribute'] == 25) {
 					if( count( CeAtributovalor::model()->findBySql('SELECT ce_atributovalor.catalogoespecies_id, atributovalor.valor, atributovalor.id FROM ce_atributovalor INNER JOIN atributovalor ON ce_atributovalor.valor = atributovalor.id WHERE ce_atributovalor.etiqueta = :etiqueta AND ce_atributovalor.catalogoespecies_id = :idCatalogo AND atributovalor.valor = :valor', array(':etiqueta'=>$_POST['labelAttribute'],':idCatalogo'=>$_POST['idCatalog'],':valor'=>$_POST['value'])) ) == 0) {
-						$atributo_Valor->atributotipo_id = 3;
+						if($_POST['labelAttribute'] == 28) {
+							$atributo_Valor->atributotipo_id = 3;
+						} else {
+							$atributo_Valor->atributotipo_id = 2;
+						}
 						$atributo_Valor->valor = $_POST['value'];
 						$atributo_Valor->save();
 						$ce_AtributoValor = new CeAtributovalor();

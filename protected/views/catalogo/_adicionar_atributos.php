@@ -31,6 +31,8 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 			dataObject["selectedMundo"] = $('#estado-amenaza-categorias-uicn-mundo-selection').val();
 		} else if(dataObject["attributeName"] == "Referencias bibliográficas") {
 			dataObject["value"] = $('#Attribute_referencia_bibliografica_id').val();
+		} else if(dataObject["attributeName"] == "Autor(es)" || dataObject["attributeName"] == "Editor(es)" || dataObject["attributeName"] == "Revisor(es)" || dataObject["attributeName"] == "Colaborador(es)") {
+			dataObject["value"] = $('#Attribute_contacto_id').val();
 		}
 		if(dataObject["value"] != "" || dataObject["selectedColombia"] != "" || dataObject["selectedMundo"] != "") {
 			$.ajax({
@@ -46,6 +48,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 					function(){
 						$("#zona-adicionar-atributos").removeClass("loading");
 						$("#form_referencias_bibliograficas_attribute").addClass("hide-element");
+						$("#form_creditos_attribute").addClass("hide-element");
 						$("#btnGuardarAtributo").hide();
 						$("#btnCancelarGuardarAtributo").hide();
 						$("#Atributos_tipoAtributo").prop("selectedIndex",0);
@@ -57,6 +60,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 						if (data.status == 'failure') {
 							$("#newAttributeConfirmation-content").html(data.respuesta);
 							$("#form_referencias_bibliograficas_attribute").addClass("hide-element");
+							$("#form_creditos_attribute").addClass("hide-element");
 							$("#zona-adicionar-atributos").hide();
 							$("#Atributos_tipoAtributo").val("");
 							$("#newAttributeConfirmation").dialog("open");
@@ -176,6 +180,28 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 	<?php echo $this->renderPartial('_referencias_bibliograficas_update_table', array('attributeReferenciasBibliograficas'=>$attributeReferenciasBibliograficas)); ?>
 </div>
 
+<div id="form_creditos_attribute" class="hide-element">
+	<div class="control-group ">
+		<label class="control-label" for="attribute">ID Contacto</label>
+		<div class="controls">
+			<input readonly="readonly" id="Attribute_contacto_id" type="text">
+		</div>
+	</div>
+	<div class="control-group ">
+		<label class="control-label" for="Attribute_contacto_personaContacto">Nombre del contacto</label>
+		<div class="controls">
+			<input size="220" class="textareaA" readonly="readonly" id="Attribute_contacto_personaContacto" type="text">
+		</div>
+	</div>
+	<div class="control-group ">
+		<label class="control-label" for="Attribute_contacto_organizacionContacto">Organización</label>
+		<div class="controls">
+			<input size="220" class="textareaA" readonly="readonly" id="Attribute_contacto_organizacionContacto" type="text">
+		</div>
+	</div>
+	<?php echo $this->renderPartial('_contactos_attribute_update_table', array('contactosAttribute'=>$contactos)); ?>
+</div>
+
 <div id="form-attibute-selected"></div>
 <div class="control-group">
 	<div class="controls">
@@ -190,7 +216,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 					'htmlOptions' => array(
 						'id' => 'btnCancelarGuardarAtributo',
 						'style' => 'display: none;',
-						'onclick'=>'{$("#form-attibute-selected").html("");$("#form_referencias_bibliograficas_attribute").addClass("hide-element");$("#btnGuardarAtributo").hide();$("#btnCancelarGuardarAtributo").hide();$("#Atributos_tipoAtributo").prop("selectedIndex",0);$("#zona-adicionar-atributos").hide();$("#btnAdicionarAtributo").removeClass("disabled");}',
+						'onclick'=>'{$("#form-attibute-selected").html("");$("#form_referencias_bibliograficas_attribute").addClass("hide-element");$("#form_creditos_attribute").addClass("hide-element");$("#btnGuardarAtributo").hide();$("#btnCancelarGuardarAtributo").hide();$("#Atributos_tipoAtributo").prop("selectedIndex",0);$("#zona-adicionar-atributos").hide();$("#btnAdicionarAtributo").removeClass("disabled");}',
 					),
 				),
 			)
