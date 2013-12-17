@@ -29,42 +29,50 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 			dataObject["mundo"] = $('#estado-amenaza-categorias-uicn-mundo').is(':checked');
 			dataObject["selectedColombia"] = $('#estado-amenaza-categorias-uicn-colombia-selection').val();
 			dataObject["selectedMundo"] = $('#estado-amenaza-categorias-uicn-mundo-selection').val();
+		} else if(dataObject["attributeName"] == "Referencias bibliográficas") {
+			dataObject["value"] = $('#Attribute_referencia_bibliografica_id').val();
 		}
-		$.ajax({
-			url: <?php echo "'".Yii::app()->createUrl("atributovalor/create").'/'.$idCatalogo."'";?>,
-			type: 'post',
-			data: dataObject,
-		    dataType: 'json',
-		    beforeSend: 
-			    function(){
-		    		$("#zona-adicionar-atributos").addClass("loading");
-				},
-			complete: 
-				function(){
-					$("#zona-adicionar-atributos").removeClass("loading");
-					$("#btnGuardarAtributo").hide();
-					$("#btnCancelarGuardarAtributo").hide();
-					$("#Atributos_tipoAtributo").prop("selectedIndex",0);
-					$("#zona-adicionar-atributos").hide();
-					$("#btnAdicionarAtributo").removeClass("disabled");
-				},
-			success: 
-				function(data) {
-					if (data.status == 'failure') {
-						$("#newAttributeConfirmation-content").html(data.respuesta);
+		if(dataObject["value"] != "" || dataObject["selectedColombia"] != "" || dataObject["selectedMundo"] != "") {
+			$.ajax({
+				url: <?php echo "'".Yii::app()->createUrl("atributovalor/create").'/'.$idCatalogo."'";?>,
+				type: 'post',
+				data: dataObject,
+			    dataType: 'json',
+			    beforeSend: 
+				    function(){
+			    		$("#zona-adicionar-atributos").addClass("loading");
+					},
+				complete: 
+					function(){
+						$("#zona-adicionar-atributos").removeClass("loading");
+						$("#form_referencias_bibliograficas_attribute").addClass("hide-element");
+						$("#btnGuardarAtributo").hide();
+						$("#btnCancelarGuardarAtributo").hide();
+						$("#Atributos_tipoAtributo").prop("selectedIndex",0);
 						$("#zona-adicionar-atributos").hide();
-						$("#Atributos_tipoAtributo").val("");
-						$("#newAttributeConfirmation").dialog("open");
-					}
-					else
-					{
-						$("#newAttributeConfirmation-content").html(data.respuesta);
-						$("#zona-lista-atributos").html(data.newAttributeList);
-						$("#form-attibute-selected").html("");
-						$("#newAttributeConfirmation").dialog("open");
-					}
-				},
-		});
+						$("#btnAdicionarAtributo").removeClass("disabled");
+					},
+				success: 
+					function(data) {
+						if (data.status == 'failure') {
+							$("#newAttributeConfirmation-content").html(data.respuesta);
+							$("#form_referencias_bibliograficas_attribute").addClass("hide-element");
+							$("#zona-adicionar-atributos").hide();
+							$("#Atributos_tipoAtributo").val("");
+							$("#newAttributeConfirmation").dialog("open");
+						}
+						else
+						{
+							$("#newAttributeConfirmation-content").html(data.respuesta);
+							$("#zona-lista-atributos").html(data.newAttributeList);
+							$("#form-attibute-selected").html("");
+							$("#newAttributeConfirmation").dialog("open");
+						}
+					},
+			});
+		} else {
+			alert("La información de atributo elegido esta vacia. Por favor complete la información para guardar el atributo correctamente.")
+		}
 	}
 //-->
 </script>
@@ -146,6 +154,28 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 	</div>
 </div>
 
+<div id="form_referencias_bibliograficas_attribute" class="hide-element">
+	<div class="control-group ">
+		<label class="control-label" for="attribute">ID Citación</label>
+		<div class="controls">
+			<input readonly="readonly" id="Attribute_referencia_bibliografica_id" type="text">
+		</div>
+	</div>
+	<div class="control-group ">
+		<label class="control-label" for="Attribute_referencia_bibliografica_tituloCita">Título de la cita</label>
+		<div class="controls">
+			<input size="220" class="textareaA" readonly="readonly" id="Attribute_referencia_bibliografica_tituloCita" type="text">
+		</div>
+	</div>
+	<div class="control-group ">
+		<label class="control-label" for="Attribute_referencia_bibliografica_autorCita">Autor de la cita</label>
+		<div class="controls">
+			<input size="220" class="textareaA" readonly="readonly" id="Attribute_referencia_bibliografica_autorCita" type="text">
+		</div>
+	</div>
+	<?php echo $this->renderPartial('_referencias_bibliograficas_update_table', array('attributeReferenciasBibliograficas'=>$attributeReferenciasBibliograficas)); ?>
+</div>
+
 <div id="form-attibute-selected"></div>
 <div class="control-group">
 	<div class="controls">
@@ -160,7 +190,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 					'htmlOptions' => array(
 						'id' => 'btnCancelarGuardarAtributo',
 						'style' => 'display: none;',
-						'onclick'=>'{$("#form-attibute-selected").html("");$("#btnGuardarAtributo").hide();$("#btnCancelarGuardarAtributo").hide();$("#Atributos_tipoAtributo").prop("selectedIndex",0);$("#zona-adicionar-atributos").hide();$("#btnAdicionarAtributo").removeClass("disabled");}',
+						'onclick'=>'{$("#form-attibute-selected").html("");$("#form_referencias_bibliograficas_attribute").addClass("hide-element");$("#btnGuardarAtributo").hide();$("#btnCancelarGuardarAtributo").hide();$("#Atributos_tipoAtributo").prop("selectedIndex",0);$("#zona-adicionar-atributos").hide();$("#btnAdicionarAtributo").removeClass("disabled");}',
 					),
 				),
 			)

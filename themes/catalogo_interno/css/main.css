@@ -234,3 +234,6 @@ div.loading * {
 #ui-datepicker-div {
 	z-index: 9999999;
 }
+.hide-element {
+  display: none;
+}

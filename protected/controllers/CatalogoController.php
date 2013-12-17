@@ -41,7 +41,7 @@ class CatalogoController extends Controller
 				'roles'=>array('admin'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-					'actions'=>array('index','create','update','updateajaxmodifytables'),
+					'actions'=>array('index','create','update','updateajaxmodifytables','deleteattribute'),
 					//'users'=>array('amsuarez'),
 					'roles'=>array('editor'),
 			),
@@ -173,6 +173,7 @@ class CatalogoController extends Controller
 	public function actionUpdateajaxmodifytables()
 	{
 		$citaciones= new Citacion('search');
+		$attributeReferenciasBibliograficas= new Citacion('search');
 		$contactos= new Contactos('search');
 		$nombresComunes=new PctesaurosCe('search'); // Lista de nombres comunes disponibles
 		$departamentos=new Departamentos('search'); // Lista de departamentos
@@ -193,6 +194,11 @@ class CatalogoController extends Controller
 				if(isset($_GET['Citacion']))
 					$citaciones->attributes=$_GET['Citacion'];
 				$this->renderPartial('_obras_citadas_update_table', array('citaciones' => $citaciones));
+				Yii::app()->end();
+			} else if($_GET['ajax'] === "attribute-referenciabibliografica-grid") {
+				if(isset($_GET['Citacion']))
+					$attributeReferenciasBibliograficas->attributes=$_GET['Citacion'];
+				$this->renderPartial('_referencias_bibliograficas_update_table', array('attributeReferenciasBibliograficas' => $attributeReferenciasBibliograficas));
 				Yii::app()->end();
 			} else if($_GET['ajax'] === "contactos-grid") {
 				if(isset($_GET['Contactos']))
@@ -237,6 +243,7 @@ class CatalogoController extends Controller
 	{
 		$model=$this->loadModel($id);
 		$citaciones= new Citacion('search');
+		$attributeReferenciasBibliograficas= new Citacion('search');
 		$contactos= new Contactos('search');
 		$nombresComunes=new PctesaurosCe('search'); // Lista de nombres comunes disponibles
 		$departamentos=new Departamentos('search'); // Lista de departamentos disponibles
@@ -576,6 +583,7 @@ class CatalogoController extends Controller
 			'regionesNaturales'=>$regionesNaturales,
 			'organizaciones'=>$organizaciones,
 			'atributos'=>$atributos,
+			'attributeReferenciasBibliograficas'=>$attributeReferenciasBibliograficas
 		));
 	}
 	
