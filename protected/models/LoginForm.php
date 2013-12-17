@@ -29,7 +29,7 @@ class LoginForm extends CFormModel
 			array('rememberMe', 'boolean'),
 			// password needs to be authenticated
 			array('password', 'authenticate'),
-			array('codigoVerificacion', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements()),
+			array('codigoVerificacion', 'captcha', 'allowEmpty'=>!CCaptcha::checkRequirements(), 'on' => 'withCaptcha'),
 		);
 	}
 
