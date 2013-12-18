@@ -113,6 +113,9 @@ $("#Atributos_tipoAtributo").change(function() {
          if(stringExploded[0] == 5) {
             $("#form-attibute-selected").html('<div class="control-group "><label class="control-label" for="attribute">Estado CITES</label><div class="controls"><select id="attribute" name="Atributos[5]"><option value="46">Apéndice I</option><option value="47">Apéndice II</option><option value="48">Apéndice III</option></select></div></div>');
          }
+         if(stringExploded[0] == 6784) {
+            $("#form-attibute-selected").html('<div class="control-group "><label class="control-label" for="attribute">¿Es invasora?</label><div class="controls"><select id="attribute" name="Atributos[6784]"><option value="6789">Si</option><option value="NO">No</option></select></div></div>');
+         }
          if(stringExploded[0] == 28) {
             $("#form-attibute-selected").html('');
             $("#form_referencias_bibliograficas_attribute").removeClass("hide-element");

@@ -151,6 +151,24 @@ class AtributovalorController extends Controller
 						));
 						exit;
 					}
+				} else if($_POST['labelAttribute'] == 6784) {
+					if($_POST['value'] == 6789) {
+						if(count(CeAtributovalor::model()->findByAttributes(array('valor'=>$_POST['value'],'etiqueta'=>$_POST['labelAttribute'],'catalogoespecies_id'=>$_POST['idCatalog']))) == 0) {
+							$ce_AtributoValor = new CeAtributovalor();
+							$ce_AtributoValor->valor=$_POST['value'];
+							$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
+							$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+							$ce_AtributoValor->id_atributo=39;
+							$ce_AtributoValor->save();
+						}
+					}
+					if(!isset($ce_AtributoValor)) {
+						echo CJSON::encode(array(
+							'status'=>'failure',
+							'respuesta'=>"<p>No se actualizaron atributos porque los datos ya existen.</p>",
+						));
+						exit;
+					}
 				} else {
 					$atributo_Valor->atributotipo_id = 4;
 					$atributo_Valor->valor = $_POST['value'];

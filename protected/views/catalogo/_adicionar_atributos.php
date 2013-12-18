@@ -60,10 +60,16 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 						if (data.status == 'failure') {
 							$("#newAttributeConfirmation-content").html(data.respuesta);
 							$("#form_referencias_bibliograficas_attribute").addClass("hide-element");
+							$("#form-attibute-selected").html("");
 							$("#form_creditos_attribute").addClass("hide-element");
 							$("#zona-adicionar-atributos").hide();
 							$("#Atributos_tipoAtributo").val("");
 							$("#newAttributeConfirmation").dialog("open");
+							$("#btnGuardarAtributo").hide();
+							$("#btnCancelarGuardarAtributo").hide();
+							$("#Atributos_tipoAtributo").prop("selectedIndex",0);
+							$("#zona-adicionar-atributos").hide();
+							$("#btnAdicionarAtributo").removeClass("disabled");
 						}
 						else
 						{
