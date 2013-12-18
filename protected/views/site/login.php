@@ -43,7 +43,7 @@ $(document).ready(function() {
 			<?php echo $form->error($model,'password'); ?>
 	</div>
     
-    <?php if(CCaptcha::checkRequirements()): ?>
+    <?php if($model->scenario == 'withCaptcha' && CCaptcha::checkRequirements()): ?>
 	<div>
 			<?php echo $form->labelEx($model,'codigoVerificacion'); ?>
 			<?php echo $form->textField($model,'codigoVerificacion', array('class'=>'field')); ?>

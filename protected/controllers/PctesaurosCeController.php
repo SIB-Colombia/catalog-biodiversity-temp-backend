@@ -124,7 +124,6 @@ class PctesaurosCeController extends Controller
 					try {
 						$nuevoNombreComun->validate();
 						yii::log(var_dump($nuevoNombreComun->getErrors()));
-						yii::log($nuevoNombreComun->getErrors());
 						($nuevoNombreComun->save(false) == true) ? $successCount++ : $failureCount++;
 						$transaction->commit();
 					} catch (Exception $e) {

@@ -699,7 +699,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     		)); ?>
     	</div>
     	<div id="zona-adicionar-atributos" style="display: none;">
-    		<?php echo $this->renderPartial('_adicionar_atributos', array('idCatalogo'=>$model->catalogoespecies_id)); ?>
+    		<?php echo $this->renderPartial('_adicionar_atributos', array('idCatalogo'=>$model->catalogoespecies_id, 'attributeReferenciasBibliograficas'=>$citaciones, 'contactos'=>$contactos)); ?>
     	</div>
     	<div id="zona-lista-atributos">
     		<?php echo $this->renderPartial('_atributos_listado', array('atributos'=>$atributos, 'model'=>$model)); ?>
@@ -719,7 +719,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
   $(document).ready(function() {
 	  $('#catalogoespecies-form').keydown(function(event){
 		  if(event.keyCode == 13) {
-			  //alert(event.target.id);
+			  console.log(event.target.id);
 			  /*var target = event.originalEvent;
 			  if(target.srcElement.id == "Citacion_citacion_id") {
 			    	event.preventDefault();
@@ -747,7 +747,61 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 				  $("#Citacion_autor").trigger("change");
 				  return false;
 			  }
-
+			  if(target.id == "Attribute_referencia_bibliografica_filter_id") {
+			  	event.preventDefault();
+				  $("#Attribute_referencia_bibliografica_filter_id").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_referencia_bibliografica_filter_fecha") {
+			  	event.preventDefault();
+				  $("#Attribute_referencia_bibliografica_filter_fecha").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_referencia_bibliografica_filter_documento_titulo") {
+			  	event.preventDefault();
+				  $("#Attribute_referencia_bibliografica_filter_documento_titulo").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_referencia_bibliografica_filter_autor") {
+			  	event.preventDefault();
+				  $("#Attribute_referencia_bibliografica_filter_autor").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_contacto_filter_id") {
+			  	event.preventDefault();
+				  $("#Attribute_contacto_filter_id").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_contacto_filter_persona") {
+			  	event.preventDefault();
+				  $("#Attribute_contacto_filter_persona").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_contacto_filter_organizacion") {
+			  	event.preventDefault();
+				  $("#Attribute_contacto_filter_organizacion").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_contacto_filter_cargo") {
+			  	event.preventDefault();
+				  $("#Attribute_contacto_filter_cargo").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_contacto_filter_direccion") {
+			  	event.preventDefault();
+				  $("#Attribute_contacto_filter_direccion").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_contacto_filter_telefono") {
+			  	event.preventDefault();
+				  $("#Attribute_contacto_filter_telefono").trigger("change");
+				  return false;	
+			  }
+			  if(target.id == "Attribute_contacto_filter_correo_electronico") {
+			  	event.preventDefault();
+				  $("#Attribute_contacto_filter_correo_electronico").trigger("change");
+				  return false;	
+			  }
 			  // Inicia target tab de contacto
 			  if(target.id == "Contactos_contacto_id") {
 				  event.preventDefault();

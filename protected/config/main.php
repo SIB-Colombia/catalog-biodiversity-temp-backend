@@ -46,7 +46,7 @@ return array(
 	'components'=>array(
 		'user'=>array(
 			// enable cookie-based authentication
-			'allowAutoLogin'=>false,
+			'allowAutoLogin'=>true,
 			'class' => 'WebUser',
 		),
 		// uncomment the following to enable URLs in path-format
@@ -74,13 +74,10 @@ return array(
 		),*/
 		// uncomment the following to use a Postgres database
 		'db'=>array(
-			'connectionString' => 'pgsql:host=localhost;port=5432;dbname=catalogobiodiversidad',
-			//'connectionString' => 'pgsql:host=74.3.218.90;port=5432;dbname=catalogo',
-			//'username' => 'lgrajales',
-			//'password' => 'Lg2013-',
+			'connectionString' => 'pgsql:host='.getenv('CATALOG_BACKEND_DBHOST').';port=5432;dbname='.getenv('CATALOG_BACKEND_DBNAME'),
 			//'emulatePrepare' => true,
-			'username' => 'user', //actualizar usuario
-			'password' => 'password', //actualizar password
+			'username' => getenv('CATALOG_BACKEND_USERNAME'), //actualizar usuario
+			'password' => getenv('CATALOG_BACKEND_USERPASSWORD'), //actualizar password
 			'charset' => 'utf8',
 			'emulatePrepare' => false,
 			'enableProfiling'=>true,
@@ -99,8 +96,8 @@ return array(
 				),*/
 				/*array(
 					'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
-					'levels'=>'error, warning, trace, profile, info',
-					'ipFilters'=>array('127.0.0.1','192.168.1.149'),
+					//'levels'=>'error, warning, trace, profile, info',
+					'ipFilters'=>array('127.0.0.1','192.168.175.1'),
 				),*/
 				// uncomment the following to show log messages on web pages
 				

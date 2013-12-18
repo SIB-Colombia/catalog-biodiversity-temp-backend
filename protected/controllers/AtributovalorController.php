@@ -68,19 +68,122 @@ class AtributovalorController extends Controller
 		// $this->performAjaxValidation($model);
 		
 		if (Yii::app()->request->isAjaxRequest) {
-			if(isset($_POST['labelAttribute']) && isset($_POST['idCatalog']) && isset($_POST['value']))
+			if(isset($_POST['labelAttribute']) && isset($_POST['idCatalog']))
 			{
-				$atributo_Valor->atributotipo_id = 4;
-				$atributo_Valor->valor = $_POST['value'];
-				$atributo_Valor->save();
-				$ce_AtributoValor = new CeAtributovalor();
-				$ce_AtributoValor->valor=$atributo_Valor->id;
-				$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
-				$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+				if ($_POST['labelAttribute'] == 2) {
+					// It's Estado de amenaza según categorías UICN attribute
+					if($_POST['colombia'] == "true") {
+						if(count(CeAtributovalor::model()->findByAttributes(array('valor'=>3,'etiqueta'=>$_POST['labelAttribute'],'catalogoespecies_id'=>$_POST['idCatalog']))) == 0) {
+							$ce_AtributoValor = new CeAtributovalor();
+							$ce_AtributoValor->valor=3;
+							$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
+							$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+							$ce_AtributoValor->save();
+						}
+						foreach($_POST['selectedColombia'] as $selectedColombia) {
+							if(count(CeAtributovalor::model()->findByAttributes(array('valor'=>$selectedColombia,'etiqueta'=>3,'catalogoespecies_id'=>$_POST['idCatalog']))) == 0) {
+								$ce_AtributoValor = new CeAtributovalor();
+								$ce_AtributoValor->valor=$selectedColombia;
+								$ce_AtributoValor->etiqueta=3;
+								$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+								$ce_AtributoValor->save();
+							}
+						}
+					}
+					if($_POST['mundo'] == "true") {
+						if(count(CeAtributovalor::model()->findByAttributes(array('valor'=>4,'etiqueta'=>$_POST['labelAttribute'],'catalogoespecies_id'=>$_POST['idCatalog']))) == 0) {
+							$ce_AtributoValor = new CeAtributovalor();
+							$ce_AtributoValor->valor=4;
+							$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
+							$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+							$ce_AtributoValor->save();
+						}
+						foreach($_POST['selectedMundo'] as $selectedMundo) {
+							if(count(CeAtributovalor::model()->findByAttributes(array('valor'=>$selectedMundo,'etiqueta'=>4,'catalogoespecies_id'=>$_POST['idCatalog']))) == 0) {
+								$ce_AtributoValor = new CeAtributovalor();
+								$ce_AtributoValor->valor=$selectedMundo;
+								$ce_AtributoValor->etiqueta=4;
+								$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+								$ce_AtributoValor->save();
+							}
+						}
+					}
+					if(!isset($ce_AtributoValor)) {
+						echo CJSON::encode(array(
+							'status'=>'failure',
+							'respuesta'=>"<p>No se actualizaron atributos porque los datos ya existen.</p>",
+						));
+						exit;
+					}
+				} else if($_POST['labelAttribute'] == 5) {
+					if(count(CeAtributovalor::model()->findByAttributes(array('valor'=>$_POST['value'],'etiqueta'=>$_POST['labelAttribute'],'catalogoespecies_id'=>$_POST['idCatalog']))) == 0) {
+						$ce_AtributoValor = new CeAtributovalor();
+						$ce_AtributoValor->valor=$_POST['value'];
+						$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
+						$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+						$ce_AtributoValor->save();
+					}
+					if(!isset($ce_AtributoValor)) {
+						echo CJSON::encode(array(
+							'status'=>'failure',
+							'respuesta'=>"<p>No se actualizaron atributos porque los datos ya existen.</p>",
+						));
+						exit;
+					}
+				} else if($_POST['labelAttribute'] == 28 || $_POST['labelAttribute'] == 19 || $_POST['labelAttribute'] == 20 || $_POST['labelAttribute'] == 24 || $_POST['labelAttribute'] == 25) {
+					if( count( CeAtributovalor::model()->findBySql('SELECT ce_atributovalor.catalogoespecies_id, atributovalor.valor, atributovalor.id FROM ce_atributovalor INNER JOIN atributovalor ON ce_atributovalor.valor = atributovalor.id WHERE ce_atributovalor.etiqueta = :etiqueta AND ce_atributovalor.catalogoespecies_id = :idCatalogo AND atributovalor.valor = :valor', array(':etiqueta'=>$_POST['labelAttribute'],':idCatalogo'=>$_POST['idCatalog'],':valor'=>$_POST['value'])) ) == 0) {
+						if($_POST['labelAttribute'] == 28) {
+							$atributo_Valor->atributotipo_id = 3;
+						} else {
+							$atributo_Valor->atributotipo_id = 2;
+						}
+						$atributo_Valor->valor = $_POST['value'];
+						$atributo_Valor->save();
+						$ce_AtributoValor = new CeAtributovalor();
+						$ce_AtributoValor->valor=$atributo_Valor->id;
+						$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
+						$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+					}
+					if(!isset($ce_AtributoValor)) {
+						echo CJSON::encode(array(
+							'status'=>'failure',
+							'respuesta'=>"<p>No se actualizaron atributos porque los datos ya existen.</p>",
+						));
+						exit;
+					}
+				} else if($_POST['labelAttribute'] == 6784) {
+					if($_POST['value'] == 6789) {
+						if(count(CeAtributovalor::model()->findByAttributes(array('valor'=>$_POST['value'],'etiqueta'=>$_POST['labelAttribute'],'catalogoespecies_id'=>$_POST['idCatalog']))) == 0) {
+							$ce_AtributoValor = new CeAtributovalor();
+							$ce_AtributoValor->valor=$_POST['value'];
+							$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
+							$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+							$ce_AtributoValor->id_atributo=39;
+							$ce_AtributoValor->save();
+						}
+					}
+					if(!isset($ce_AtributoValor)) {
+						echo CJSON::encode(array(
+							'status'=>'failure',
+							'respuesta'=>"<p>No se actualizaron atributos porque los datos ya existen.</p>",
+						));
+						exit;
+					}
+				} else {
+					$atributo_Valor->atributotipo_id = 4;
+					$atributo_Valor->valor = $_POST['value'];
+					$atributo_Valor->save();
+					$ce_AtributoValor = new CeAtributovalor();
+					$ce_AtributoValor->valor=$atributo_Valor->id;
+					$ce_AtributoValor->etiqueta=$_POST['labelAttribute'];
+					$ce_AtributoValor->catalogoespecies_id=$_POST['idCatalog'];
+				}
 				if($ce_AtributoValor->save()) {
 					$model=Catalogoespecies::model()->findByPk($_POST['idCatalog']);
 					$atributos["Distribución altitudinal"]=array(); // 1
 					$atributos["Estado de amenaza según categorías UICN"]=array(); // 2
+					$atributos["Estado de amenaza según categorías UICN"]["En Colombia"]=array(); // 3
+					$atributos["Estado de amenaza según categorías UICN"]["En el mundo"]=array(); // 4
 					$atributos["Estado CITES"]=array(); // 5
 					$atributos["Factores de amenaza"]=array(); // 6
 					$atributos["Estado actual de la población"]=array(); // 7
@@ -135,11 +238,11 @@ class AtributovalorController extends Controller
 						} else if($ceAtributoValor->etiqueta == "3") {
 							$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 							$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
-							$atributos["Estado de amenaza según categorías UICN"]["En Colombia"] = array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor);
+							array_push($atributos["Estado de amenaza según categorías UICN"]["En Colombia"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 						} else if($ceAtributoValor->etiqueta == "4") {
 							$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 							$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
-							$atributos["Estado de amenaza según categorías UICN"]["En el mundo"] = array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor);
+							array_push($atributos["Estado de amenaza según categorías UICN"]["En el mundo"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 						} else if($ceAtributoValor->etiqueta == "5") {
 							$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 							$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
@@ -315,16 +418,26 @@ class AtributovalorController extends Controller
 							array_push($atributos["Sinónimos"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 						}
 					}
+					if(isset($_POST['value'])) {
+						$updatedValue = $_POST['value'];
+					} else {
+						$updatedValue = "";
+					}
 					echo CJSON::encode(array(
 						'status'=>'success',
-						'respuesta'=>"<p>Atributo correspondiente a:<br><strong>".$_POST['attributeName']."</strong></p><p>Con valor:<br>".$_POST['value']."</p><p>Ha sido guardado exitosamente.</p>",
+						'respuesta'=>"<p>Atributo correspondiente a:<br><strong>".$_POST['attributeName']."</strong></p><p>Con valor:<br>".$updatedValue."</p><p>Ha sido guardado exitosamente.</p>",
 						'newAttributeList'=>$this->renderPartial('//catalogo/_atributos_listado', array('atributos'=>$atributos, 'model'=>$model), true),
 					));
 					exit;
 				} else {
+					if(isset($_POST['value'])) {
+						$updatedValue = $_POST['value'];
+					} else {
+						$updatedValue = "";
+					}
 					echo CJSON::encode(array(
 						'status'=>'failure',
-						'respuesta'=>"<p>Fallo al guardar el atributo correspondiente a:<br><strong>".$_POST['attributeName']."</strong></p><p>Con valor:<br>".$_POST['value'],
+						'respuesta'=>"<p>Fallo al guardar el atributo correspondiente a:<br><strong>".$_POST['attributeName']."</strong></p><p>Con valor:<br>".$updatedValue,
 					));
 					exit;
 				}

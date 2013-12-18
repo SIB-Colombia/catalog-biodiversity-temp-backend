@@ -17,9 +17,6 @@
 	<!-- Fuentes google -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:700|Prosto+One' rel='stylesheet' type='text/css'>
 		
-	<!-- blueprint CSS framework -->
-	<link rel="stylesheet" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/screen.css" media="screen, projection" />
-	<link rel="stylesheet" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/print.css" media="print" />
 	<!--[if lt IE 8]>
 	<link rel="stylesheet" href="<?php echo Yii::app()->theme->baseUrl; ?>/css/ie.css" media="screen, projection" />
 	<![endif]-->

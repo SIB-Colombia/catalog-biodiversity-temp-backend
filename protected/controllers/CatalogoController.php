@@ -41,7 +41,7 @@ class CatalogoController extends Controller
 				'roles'=>array('admin'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-					'actions'=>array('index','create','update','updateajaxmodifytables'),
+					'actions'=>array('index','create','update','updateajaxmodifytables','deleteattribute'),
 					//'users'=>array('amsuarez'),
 					'roles'=>array('editor'),
 			),
@@ -100,7 +100,6 @@ class CatalogoController extends Controller
 				$datosTaxonomicos=new PcaatCe();
 				$model->validate();
 				yii::log(var_dump($model->getErrors()));
-				yii::log($model->getErrors());
 				
 				$success_saving_all = true;
 				
@@ -127,7 +126,6 @@ class CatalogoController extends Controller
 					
 					$verificacion->validate();
 					yii::log(var_dump($verificacion->getErrors()));
-					yii::log($verificacion->getErrors());
 					$verificacion->save(false);
 					
 					$model->verificacionce=$verificacion;
@@ -141,7 +139,6 @@ class CatalogoController extends Controller
 					$datosTaxonomicos->paginaweb=$model->paginaWeb;
 					$datosTaxonomicos->validate();
 					yii::log(var_dump($datosTaxonomicos->getErrors()));
-					yii::log($datosTaxonomicos->getErrors());
 					$datosTaxonomicos->save(false);
 					$model->pcaatCe=$datosTaxonomicos;
 					
@@ -176,7 +173,9 @@ class CatalogoController extends Controller
 	public function actionUpdateajaxmodifytables()
 	{
 		$citaciones= new Citacion('search');
+		$attributeReferenciasBibliograficas= new Citacion('search');
 		$contactos= new Contactos('search');
+		$attributeContactos= new Contactos('search');
 		$nombresComunes=new PctesaurosCe('search'); // Lista de nombres comunes disponibles
 		$departamentos=new Departamentos('search'); // Lista de departamentos
 		$corporaciones=new Corporaciones('search'); // Lista de corporaciones
@@ -197,6 +196,16 @@ class CatalogoController extends Controller
 					$citaciones->attributes=$_GET['Citacion'];
 				$this->renderPartial('_obras_citadas_update_table', array('citaciones' => $citaciones));
 				Yii::app()->end();
+			} else if($_GET['ajax'] === "attribute-referenciabibliografica-grid") {
+				if(isset($_GET['Citacion']))
+					$attributeReferenciasBibliograficas->attributes=$_GET['Citacion'];
+				$this->renderPartial('_referencias_bibliograficas_update_table', array('attributeReferenciasBibliograficas' => $attributeReferenciasBibliograficas));
+				Yii::app()->end();
+			} else if($_GET['ajax'] === "attribute-contactos-grid") {
+				if(isset($_GET['Contactos']))
+					$attributeContactos->attributes=$_GET['Contactos'];
+				$this->renderPartial('_contactos_attribute_update_table', array('contactosAttribute'=>$attributeContactos));
+				Yii::app()->end();				
 			} else if($_GET['ajax'] === "contactos-grid") {
 				if(isset($_GET['Contactos']))
 					$contactos->attributes=$_GET['Contactos'];
@@ -270,6 +279,8 @@ class CatalogoController extends Controller
 		
 		$atributos["Distribución altitudinal"]=array(); // 1
 		$atributos["Estado de amenaza según categorías UICN"]=array(); // 2
+		$atributos["Estado de amenaza según categorías UICN"]["En Colombia"]=array(); // 3
+		$atributos["Estado de amenaza según categorías UICN"]["En el mundo"]=array(); // 4
 		$atributos["Estado CITES"]=array(); // 5
 		$atributos["Factores de amenaza"]=array(); // 6
 		$atributos["Estado actual de la población"]=array(); // 7
@@ -324,11 +335,11 @@ class CatalogoController extends Controller
 			} else if($ceAtributoValor->etiqueta == "3") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
-				$atributos["Estado de amenaza según categorías UICN"]["En Colombia"] = array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor);
+				array_push($atributos["Estado de amenaza según categorías UICN"]["En Colombia"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 			} else if($ceAtributoValor->etiqueta == "4") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
-				$atributos["Estado de amenaza según categorías UICN"]["En el mundo"] = array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor);
+				array_push($atributos["Estado de amenaza según categorías UICN"]["En el mundo"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 			} else if($ceAtributoValor->etiqueta == "5") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
@@ -515,7 +526,6 @@ class CatalogoController extends Controller
 			
 			$model->validate();
 			yii::log(var_dump($model->getErrors()));
-			yii::log($model->getErrors());
 				
 			$success_saving_all = true;
 				
@@ -545,7 +555,6 @@ class CatalogoController extends Controller
 				
 				$model->validate();
 				yii::log(var_dump($model->getErrors()));
-				yii::log($model->getErrors());
 				
 				$model->verificacionce->save(false);
 				$model->pcaatCe->save(false);
@@ -578,7 +587,7 @@ class CatalogoController extends Controller
 			'corporaciones'=>$corporaciones,
 			'regionesNaturales'=>$regionesNaturales,
 			'organizaciones'=>$organizaciones,
-			'atributos'=>$atributos,
+			'atributos'=>$atributos
 		));
 	}
 	
@@ -586,9 +595,13 @@ class CatalogoController extends Controller
 	{
 		if(isset($_GET["ajax"]))
 		{
-			if(isset($_GET["idAtributo"])) {
-				$ceAttributeValue = CeAtributovalor::model()->findByAttributes(array('valor'=>$_GET["idAtributo"]))->delete();
-				$attributeValue= Atributovalor::model()->findByPk($_GET["idAtributo"])->delete();
+			if(isset($_GET["atributovalor_id"]) && isset($_GET["idAtributo"])) {
+				$ceAttributeValue = CeAtributovalor::model()->findByAttributes(array('ceatributovalor_id'=>$_GET["atributovalor_id"], 'valor'=>$_GET["idAtributo"]))->delete();
+			} else {
+				if(isset($_GET["idAtributo"])) {
+					$ceAttributeValue = CeAtributovalor::model()->findByAttributes(array('valor'=>$_GET["idAtributo"]))->delete();
+					$attributeValue= Atributovalor::model()->findByPk($_GET["idAtributo"])->delete();
+				}
 			}
 		}
 	}

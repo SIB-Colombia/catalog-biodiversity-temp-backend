@@ -88,6 +88,10 @@ class SiteController extends Controller
 	{
 		$model=new LoginForm;
 
+		if(Yii::app()->user->getState('attempts-login') > 3) { //make the captcha required if the unsuccessful attemps are more of thee
+			$model->scenario = 'withCaptcha';
+		}
+
 		// if it is ajax validation request
 		if(isset($_POST['ajax']) && $_POST['ajax']==='login-form')
 		{
@@ -100,8 +104,15 @@ class SiteController extends Controller
 		{
 			$model->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
-			if($model->validate() && $model->login())
+			if($model->validate() && $model->login()) {
+				Yii::app()->user->setState('attempts-login', 0); //if login is successful, reset the attemps
 				$this->redirect(Yii::app()->user->returnUrl);
+			} else {
+				Yii::app()->user->setState('attempts-login', Yii::app()->user->getState('attempts-login', 0) + 1);
+				if (Yii::app()->user->getState('attempts-login') > 3) { 
+					$model->scenario = 'withCaptcha'; //useful only for view
+				}
+			}
 		}
 		// display the login form
 		$this->render('login',array('model'=>$model));
