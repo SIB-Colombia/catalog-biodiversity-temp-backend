@@ -108,61 +108,122 @@ class ApiController extends Controller
 			case 'fichasresumen':
 				if(isset($_GET['page'])) {
 					$offset = ($_GET['page'] - 1) * 20;
-					$condition= new CDbCriteria();
-					$condition->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
-					$condition->join .= 'INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id")';
-					//$condition->with = array('pcaatCe', 'citacion', 'verificacionce', 'pctesaurosCes', 'pcdepartamentosCes', 'pcregionnaturalCes', 'pccorporacionesCes', 'pcorganizacionesCes', 'ceAtributovalors');
-					if(isset($_GET['scientificname'])) {
-						$condition->compare('LOWER("pcaatCe".taxonnombre)', strtolower($_GET['scientificname']), true );
-					}
-					if(isset($_GET['taxon'])) {
-						$condition->compare('LOWER("pcaatCe".taxoncompleto)', strtolower($_GET['taxon']), true );
-					}
-					if(isset($_GET['id'])) {
-						$condition->compare('t.catalogoespecies_id',$_GET['id']);
-					}
-					$sql='';
-					if(isset($_GET['commonname'])) {
-						$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
-							."FROM catalogoespecies "
-							."INNER JOIN pctesauros_ce ON catalogoespecies.catalogoespecies_id = pctesauros_ce.catalogoespecies_id "
-							."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($_GET['commonname'])."%'";
-						$condition->addCondition('t.catalogoespecies_id IN ('.$sql.')', 'OR');
-					}
-					if(isset($_GET['onlyimages'])) {
-						if($_GET['onlyimages'] == "true") {
-							$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
-								."FROM public.catalogoespecies, public.ce_atributovalor, public.atributos "
-								."WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = 'Imagen'";
-							$condition->addCondition('t.catalogoespecies_id IN ('.$sql.')');
+					if(isset($_GET['priorityimages'])) {
+						$queryWithImages='SELECT "t"."catalogoespecies_id", "t"."citacion_id", "t"."contacto_id", "t"."fechaactualizacion", "t"."fechaelaboracion", "t"."titulometadato", "t"."jerarquianombrescomunes" FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") WHERE "t".catalogoespecies_id IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = \'Imagen\')) ';
+						$queryWithoutImages='SELECT "t"."catalogoespecies_id", "t"."citacion_id", "t"."contacto_id", "t"."fechaactualizacion", "t"."fechaelaboracion", "t"."titulometadato", "t"."jerarquianombrescomunes" FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") WHERE "t".catalogoespecies_id NOT IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = \'Imagen\')) ';
+						if(isset($_GET['scientificname'])) {
+							$queryWithImages .= 'AND LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['scientificname']).'%\' ';
+							$queryWithoutImages .= 'AND LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['scientificname']).'%\' ';
 						}
-					}
-					if(isset($_GET['order'])) {
-						if($_GET['order'] == "scientificname") {
-							$condition->order = '"pcaatCe".taxonnombre';
-						} else if($_GET['order'] == "author") {
-							$condition->order = '"pcaatCe".autor';
+						if(isset($_GET['taxon'])) {
+							$queryWithImages .= 'AND LOWER("pcaatCe".taxoncompleto) LIKE \'%'.strtolower($_GET['taxon']).'%\' ';
+							$queryWithoutImages .= 'AND LOWER("pcaatCe".taxoncompleto) LIKE \'%'.strtolower($_GET['taxon']).'%\' ';
+						}
+						if(isset($_GET['id'])) {
+							$queryWithImages .= 'AND t.catalogoespecies_id = '.$_GET['id'].' ';
+							$queryWithoutImages .= 'AND t.catalogoespecies_id = '.$_GET['id'].' ';
+						}
+						if(isset($_GET['commonname'])) {
+							$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+								."FROM catalogoespecies "
+								."INNER JOIN pctesauros_ce ON catalogoespecies.catalogoespecies_id = pctesauros_ce.catalogoespecies_id "
+								."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($_GET['commonname'])."%'";
+							$queryWithImages .= 'AND t.catalogoespecies_id IN ('.$sql.') ';
+							$queryWithoutImages .= 'AND t.catalogoespecies_id IN ('.$sql.') ';
+						}
+						$queryWithImages .= 'AND "pcaatCe".taxonnombre <> \'\' ';
+						$queryWithoutImages .= 'AND "pcaatCe".taxonnombre <> \'\' ';
+						if(isset($_GET['order'])) {
+							if($_GET['order'] == "scientificname") {
+								$queryWithImages .= 'ORDER BY "pcaatCe".taxonnombre ';
+								$queryWithoutImages .= 'ORDER BY "pcaatCe".taxonnombre ';
+							} else if($_GET['order'] == "author") {
+								$queryWithImages .= 'ORDER BY "pcaatCe".autor ';
+								$queryWithoutImages .= 'ORDER BY "pcaatCe".autor ';
+							} else {
+								$queryWithImages .= 'ORDER BY fechaelaboracion ';
+								$queryWithoutImages .= 'ORDER BY fechaelaboracion ';
+							}
+						} else {
+							$queryWithImages .= 'ORDER BY fechaelaboracion ';
+							$queryWithoutImages .= 'ORDER BY fechaelaboracion ';
+						}
+						if(isset($_GET['orderdirection'])) {
+							if($_GET['orderdirection'] == "asc") {
+								$queryWithImages .= 'ASC';
+								$queryWithoutImages .= 'ASC';
+							} else {
+								$queryWithImages .= 'DESC';
+								$queryWithoutImages .= 'DESC';
+							}
+						} else {
+							$queryWithImages .= 'DESC';
+							$queryWithoutImages .= 'DESC';
+						}
+						$unionSQL = '('.$queryWithImages.') UNION ALL ('.$queryWithoutImages.') LIMIT 20 OFFSET '.$offset;
+						$unionSQLALL = 'select count(*) FROM (('.$queryWithImages.') UNION ALL ('.$queryWithoutImages.')) AS totalRegs';
+						$models = Catalogoespecies::model()->findAllBySql($unionSQL);
+						$countreg = Catalogoespecies::model()->countBySql($unionSQLALL);
+						//yii::log(CVarDumper::dumpAsString($countreg), CLogger::LEVEL_INFO);
+					} else {
+						$condition= new CDbCriteria();
+						$condition->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
+						$condition->join .= 'INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id")';
+						//$condition->with = array('pcaatCe', 'citacion', 'verificacionce', 'pctesaurosCes', 'pcdepartamentosCes', 'pcregionnaturalCes', 'pccorporacionesCes', 'pcorganizacionesCes', 'ceAtributovalors');
+						if(isset($_GET['scientificname'])) {
+							$condition->compare('LOWER("pcaatCe".taxonnombre)', strtolower($_GET['scientificname']), true );
+						}
+						if(isset($_GET['taxon'])) {
+							$condition->compare('LOWER("pcaatCe".taxoncompleto)', strtolower($_GET['taxon']), true );
+						}
+						if(isset($_GET['id'])) {
+							$condition->compare('t.catalogoespecies_id',$_GET['id']);
+						}
+						$sql='';
+						if(isset($_GET['commonname'])) {
+							$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+								."FROM catalogoespecies "
+								."INNER JOIN pctesauros_ce ON catalogoespecies.catalogoespecies_id = pctesauros_ce.catalogoespecies_id "
+								."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($_GET['commonname'])."%'";
+							$condition->addCondition('t.catalogoespecies_id IN ('.$sql.')', 'OR');
+						}
+						if(isset($_GET['onlyimages'])) {
+							if($_GET['onlyimages'] == "true") {
+								$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+									."FROM public.catalogoespecies, public.ce_atributovalor, public.atributos "
+									."WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = 'Imagen'";
+								$condition->addCondition('t.catalogoespecies_id IN ('.$sql.')');
+							}
+						}
+						if(isset($_GET['order'])) {
+							if($_GET['order'] == "scientificname") {
+								$condition->order = '"pcaatCe".taxonnombre';
+							} else if($_GET['order'] == "author") {
+								$condition->order = '"pcaatCe".autor';
+							} else {
+								$condition->order = "fechaelaboracion";
+							}
 						} else {
 							$condition->order = "fechaelaboracion";
 						}
-					} else {
-						$condition->order = "fechaelaboracion";
-					}
-					if(isset($_GET['orderdirection'])) {
-						if($_GET['orderdirection'] == "asc") {
-							$condition->order = $condition->order." ASC";
+						if(isset($_GET['orderdirection'])) {
+							if($_GET['orderdirection'] == "asc") {
+								$condition->order = $condition->order." ASC";
+							} else {
+								$condition->order = $condition->order." DESC";
+							}
 						} else {
 							$condition->order = $condition->order." DESC";
 						}
-					} else {
-						$condition->order = $condition->order." DESC";
+						$condition->limit=20;
+						$condition->offset=$offset;
+						$models = Catalogoespecies::model()->findAll($condition);
+						$condition->limit=null;
+						$condition->offset=null;
+						$countreg = Catalogoespecies::model()->count($condition);
 					}
-					$condition->limit=20;
-					$condition->offset=$offset;
-					$models = Catalogoespecies::model()->findAll($condition);
-					$condition->limit=null;
-					$condition->offset=null;
-					$countreg = Catalogoespecies::model()->count($condition);
+					//$this->render('index');
+					//Yii::app()->end();
 				} else {
 					// Model not implemented error
 					$this->_sendResponse(501, sprintf(

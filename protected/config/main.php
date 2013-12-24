@@ -97,7 +97,7 @@ return array(
 				/*array(
 					'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
 					//'levels'=>'error, warning, trace, profile, info',
-					'ipFilters'=>array('127.0.0.1','192.168.175.1'),
+					'ipFilters'=>array('127.0.0.1','192.168.16.115'),
 				),*/
 				// uncomment the following to show log messages on web pages
 				
