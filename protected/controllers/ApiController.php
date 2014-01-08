@@ -131,6 +131,16 @@ class ApiController extends Controller
 							$queryWithImages .= 'AND t.catalogoespecies_id IN ('.$sql.') ';
 							$queryWithoutImages .= 'AND t.catalogoespecies_id IN ('.$sql.') ';
 						}
+						if(isset($_GET['query'])) {
+							$queryWithImages .= 'AND (LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['query']).'%\' ';
+							$queryWithoutImages .= 'AND (LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['query']).'%\' ';							
+							$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+								."FROM catalogoespecies "
+								."INNER JOIN pctesauros_ce ON catalogoespecies.catalogoespecies_id = pctesauros_ce.catalogoespecies_id "
+								."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($_GET['query'])."%'";
+							$queryWithImages .= 'OR t.catalogoespecies_id IN ('.$sql.') ) ';
+							$queryWithoutImages .= 'OR t.catalogoespecies_id IN ('.$sql.') ) ';
+						}
 						$queryWithImages .= 'AND "pcaatCe".taxonnombre <> \'\' ';
 						$queryWithoutImages .= 'AND "pcaatCe".taxonnombre <> \'\' ';
 						if(isset($_GET['order'])) {
