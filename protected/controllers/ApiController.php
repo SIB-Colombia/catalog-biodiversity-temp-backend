@@ -99,6 +99,28 @@ class ApiController extends Controller
 		}
 	}
 
+	public function actionListSpecies() {
+		$query='SELECT "t"."catalogoespecies_id", "pcaatCe".taxonnombre FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") WHERE "t".catalogoespecies_id IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id)) ';
+		$models = Catalogoespecies::model()->findAllBySql($query);
+		// Did we get some results?
+		if(empty($models)) {
+			// No
+			$this->_sendResponse(200, CJSON::encode('No items where found'));
+		} else {
+			// Prepare response
+			$rows = array();
+			$rows["data"] = [];
+			$counter = 0;
+			foreach($models as $model) {
+				$rows["data"][$counter]["id"] = $model->catalogoespecies_id;
+				$rows["data"][$counter]["taxon_nombre"] = ($model->pcaatCe->taxonnombre != "" ? $model->pcaatCe->taxonnombre : null);
+				$counter++;
+			}
+			// Send the response
+			$this->_sendResponse(200, CJSON::encode($rows));
+		}
+	}
+
 	public function actionList()
 	{
 		// Get the respective model instance
@@ -749,6 +771,7 @@ class ApiController extends Controller
 	
 	private function _sendResponse($status = 200, $body = '', $content_type = 'application/json')
 	{
+		ob_start('ob_gzhandler');
 		// set the status
 		$status_header = 'HTTP/1.1 ' . $status . ' ' . $this->_getStatusCodeMessage($status);
 		header($status_header);
