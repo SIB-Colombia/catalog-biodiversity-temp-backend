@@ -100,7 +100,7 @@ class ApiController extends Controller
 	}
 
 	public function actionListSpecies() {
-		$query='SELECT "t"."catalogoespecies_id", "pcaatCe".taxonnombre FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") WHERE "t".catalogoespecies_id IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id)) ';
+		$query='SELECT "t"."catalogoespecies_id", "pcaatCe".taxonnombre FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") WHERE "t".catalogoespecies_id IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id)) ORDER BY "pcaatCe".taxonnombre ASC';
 		$models = Catalogoespecies::model()->findAllBySql($query);
 		// Did we get some results?
 		if(empty($models)) {
