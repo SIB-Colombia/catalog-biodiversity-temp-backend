@@ -60,6 +60,7 @@ return array(
 				// REST patterns
 				array('api/list', 'pattern'=>'api/<model:\w+>', 'verb'=>'GET'),
 				array('api/listSpecies', 'pattern'=>'api/list/species', 'verb'=>'GET'),
+				array('api/listPreviewWithImagesRandom', 'pattern'=>'api/fichas/previewrandomspecies', 'verb'=>'GET'),
 				array('api/carrusel', 'pattern'=>'api/fichas/<model:\w+>', 'verb'=>'GET'),
 				array('api/view', 'pattern'=>'api/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
 				'catalogoUser/<action:\w+>'=>'catalogoUser/<action>',
