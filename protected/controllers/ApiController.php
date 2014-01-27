@@ -199,7 +199,7 @@ class ApiController extends Controller
 					foreach($atributos as $atributo) {
 						if(isset($atributo->atributo)) {
 							if($atributo->etiqueta == 3 || $atributo->etiqueta == 4) {
-								$rows[$model->catalogoespecies_id]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+								$rows["data"][$counter]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
 							}
 						}
 					}
@@ -462,7 +462,7 @@ class ApiController extends Controller
 						foreach($atributos as $atributo) {
 							if(isset($atributo->atributo)) {
 								if($atributo->etiqueta == 3 || $atributo->etiqueta == 4) {
-									$rows[$model->catalogoespecies_id]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+									$rows["data"][$counter]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
 								}
 							}
 						}
