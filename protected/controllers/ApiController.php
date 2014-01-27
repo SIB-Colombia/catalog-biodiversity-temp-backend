@@ -196,10 +196,12 @@ class ApiController extends Controller
 				}
 				if(isset($model->ceAtributovalors)) {
 					$atributos=$model->ceAtributovalors;
+					$rows["data"][$counter]["atributos"] = [];
+					$counterAtributos = 0;
 					foreach($atributos as $atributo) {
 						if(isset($atributo->atributo)) {
 							if($atributo->etiqueta == 3 || $atributo->etiqueta == 4) {
-								$rows["data"][$counter]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+								$rows["data"][$counter]["atributos"][$counterAtributos]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
 							}
 						}
 					}
@@ -459,10 +461,12 @@ class ApiController extends Controller
 					}
 					if(isset($model->ceAtributovalors)) {
 						$atributos=$model->ceAtributovalors;
+						$rows["data"][$counter]["atributos"] = [];
+						$counterAtributos = 0;
 						foreach($atributos as $atributo) {
 							if(isset($atributo->atributo)) {
 								if($atributo->etiqueta == 3 || $atributo->etiqueta == 4) {
-									$rows["data"][$counter]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+									$rows["data"][$counter]["atributos"][$counterAtributos]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
 								}
 							}
 						}
