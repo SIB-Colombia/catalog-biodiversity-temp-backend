@@ -11,6 +11,7 @@
  * @property string $fechaelaboracion
  * @property string $titulometadato
  * @property string $jerarquianombrescomunes
+ * @property int $active
  *
  * The followings are the available model relations:
  * @property PcaatCe $pcaatCe
@@ -147,6 +148,7 @@ class Catalogoespecies extends CActiveRecord
 		$criteria->compare('t.catalogoespecies_id',$this->catalogoespecies_id);
 		$criteria->compare('citacion_id',$this->citacion_id);
 		$criteria->compare('contacto_id',$this->contacto_id);
+		$criteria->compare('active',0);
 		//$criteria->compare('fechaactualizacion',$this->fechaactualizacion,true);
 		//$criteria->compare('fechaelaboracion',$this->fechaelaboracion,true);
 		$criteria->addCondition('fechaactualizacion::text LIKE \'%'.$this->fechaactualizacion.'%\'');

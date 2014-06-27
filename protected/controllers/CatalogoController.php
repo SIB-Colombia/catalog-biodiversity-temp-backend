@@ -711,6 +711,10 @@ class CatalogoController extends Controller
 						$model=$this->loadModel($id);
 					}
 				}
+			} else {
+				$catalogoModel = $this->loadModel($id);
+				$catalogoModel->active = 1;
+				$catalogoModel->save();
 			}
 		}
 		

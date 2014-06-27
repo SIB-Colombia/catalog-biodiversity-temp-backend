@@ -87,7 +87,7 @@
 						)),*/
 					),
 				),
-				'<form class="navbar-search pull-left" action=""><input type="text" class="search-query span2" placeholder="Buscar"></form>',
+				//'<form class="navbar-search pull-left" action=""><input type="text" class="search-query span2" placeholder="Buscar"></form>',
 				'<img class="pull-right" src="'.Yii::app()->theme->baseUrl.'/images/logo_sib.png">',
 				array(
 					'class'=>'bootstrap.widgets.TbMenu',
