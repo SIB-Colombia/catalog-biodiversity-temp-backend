@@ -41,7 +41,7 @@ class CatalogoController extends Controller
 				'roles'=>array('admin'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-					'actions'=>array('index','create','update','updateajaxmodifytables','deleteattribute'),
+					'actions'=>array('index','create','update','updateajaxmodifytables','deleteattribute','delete'),
 					//'users'=>array('amsuarez'),
 					'roles'=>array('editor'),
 			),
@@ -89,7 +89,7 @@ class CatalogoController extends Controller
 			} else if($_GET['ajax'] === "contactos-grid") {
 				if(isset($_GET['Contactos']))
 					$contactos->attributes=$_GET['Contactos'];
-				$this->renderPartial('_contacto_ficha_admin_table', array('contactos' => $contactos));
+				$this->renderPartial('_contacto_ficha_update_table', array('contactos' => $contactos));
 				Yii::app()->end();
 			}
 		} else {
@@ -787,14 +787,20 @@ class CatalogoController extends Controller
 						$model2->ids_filter = $ids_st;
 						$model3->ids_filter = $ids_st;
 						$model4->ids_filter = $ids_st;
+						
 					}
 					else {
 						$model->ids_filter	 = '0';
-						
+						$model2->ids_filter = '0';
+						$model3->ids_filter = '0';
+						$model4->ids_filter = '0';
 					}
 				}
 				else{
 					$model->ids_filter	 = '0';
+					$model2->ids_filter = '0';
+					$model3->ids_filter = '0';
+					$model4->ids_filter = '0';
 				}
 				
 			}
