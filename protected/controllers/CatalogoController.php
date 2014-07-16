@@ -93,45 +93,44 @@ class CatalogoController extends Controller
 				Yii::app()->end();
 			}
 		} else {
-			if(isset($_POST['Catalogoespecies']))
-			{
-				$model->attributes=$_POST['Catalogoespecies'];
-				$verificacion=new Verificacionce();
-				$datosTaxonomicos=new PcaatCe();
-				$model->validate();
-				yii::log(var_dump($model->getErrors()));
+			
+			if (Yii::app()->user->getState("roles") != "admin"){
+				$date = date('Y-m-d');
+			
+				$model->fechaelaboracion=$date;
+				$model->fechaactualizacion=$date;
 				
-				$success_saving_all = true;
-				
+				$modelUsuario = CatalogoUser::model()->findByPk(Yii::app()->user->getId());
+				$modelContacto = Contactos::model()->findByPk($modelUsuario->contacto_id);
+				$model->contacto_id = $modelContacto->contacto_id;
+				$model->citacion_id = 0;
+				$model->idEstadoVerificacion = 1;
 				$transaction = Yii::app()->db->beginTransaction();
-				
+				$success_saving_all = true;
 				try {
-					// save the artist
-					$model->save(false);
 					
-					// Guardar datos de verificación
+					$model->save(false);
+					$verificacion=new Verificacionce();
+					
 					$verificacion->catalogoespecies_id=$model->catalogoespecies_id;
 					
 					// Guardo en contacto_id el correo electrónico del contacto
-					$contacto=Contactos::model()->findByPk($model->contacto_id);
-					$verificacion->contacto_id=$contacto->correo_electronico;
+					$verificacion->contacto_id=$modelContacto->correo_electronico;
 					
 					// Guardo en contactoresponsable_id el correo electrónico del usuario que ingresó al sistema
-					$contactoResponsable=Contactos::model()->findByPk(Yii::app()->user->getId());
-					$verificacion->contactoresponsable_id=$contactoResponsable->correo_electronico;
+					$verificacion->contactoresponsable_id=$modelContacto->correo_electronico;
 					
 					$verificacion->estado_id=$model->idEstadoVerificacion;
 					$verificacion->fecha=$model->fechaactualizacion;
-					$verificacion->comentarios=$model->comentarioVerificacion;
 					
 					$verificacion->validate();
 					yii::log(var_dump($verificacion->getErrors()));
 					$verificacion->save(false);
 					
 					$model->verificacionce=$verificacion;
-					// Fin de guardado datos de verificacion
 					
 					// Guardar datos taxonómicos
+					$datosTaxonomicos=new PcaatCe();
 					$datosTaxonomicos->catalogoespecies_id=$model->catalogoespecies_id;
 					$datosTaxonomicos->taxonnombre=$model->taxonNombre;
 					$datosTaxonomicos->taxoncompleto=$model->jerarquiaTaxonomica;
@@ -143,30 +142,98 @@ class CatalogoController extends Controller
 					$model->pcaatCe=$datosTaxonomicos;
 					
 					$model->save(false);
+					
 					$transaction->commit();
+					
 				} catch (Exception $e) {
 					$transaction->rollback();
 					Yii::log("Error occurred while saving catalog species data. Rolling back... . Failure reason as reported in exception: " . $e->getMessage(), 'error');
 					$success_saving_all = false;
+					Yii::app()->end();
 				}
 				
 				if($success_saving_all) {
-					$this->redirect(array('view','id'=>$model->catalogoespecies_id));
+					$this->redirect(array('update','id'=>$model->catalogoespecies_id));
 				} else {
-					//$this->redirect(array("catalogo/index"));
+					$this->redirect(array("catalogo/index"));
 				}
+			}else{
+				if(isset($_POST['Catalogoespecies']))
+				{
+					$model->attributes=$_POST['Catalogoespecies'];
+					$verificacion=new Verificacionce();
+					$datosTaxonomicos=new PcaatCe();
+					$model->validate();
+					yii::log(var_dump($model->getErrors()));
+					
+					$success_saving_all = true;
+					
+					$transaction = Yii::app()->db->beginTransaction();
+					
+					try {
+						// save the artist
+						$model->save(false);
+						
+						// Guardar datos de verificación
+						$verificacion->catalogoespecies_id=$model->catalogoespecies_id;
+						
+						// Guardo en contacto_id el correo electrónico del contacto
+						$contacto=Contactos::model()->findByPk($model->contacto_id);
+						$verificacion->contacto_id=$contacto->correo_electronico;
+						
+						// Guardo en contactoresponsable_id el correo electrónico del usuario que ingresó al sistema
+						$contactoResponsable=Contactos::model()->findByPk(Yii::app()->user->getId());
+						$verificacion->contactoresponsable_id=$contactoResponsable->correo_electronico;
+						
+						$verificacion->estado_id=$model->idEstadoVerificacion;
+						$verificacion->fecha=$model->fechaactualizacion;
+						$verificacion->comentarios=$model->comentarioVerificacion;
+						
+						$verificacion->validate();
+						yii::log(var_dump($verificacion->getErrors()));
+						$verificacion->save(false);
+						
+						$model->verificacionce=$verificacion;
+						// Fin de guardado datos de verificacion
+						
+						// Guardar datos taxonómicos
+						$datosTaxonomicos->catalogoespecies_id=$model->catalogoespecies_id;
+						$datosTaxonomicos->taxonnombre=$model->taxonNombre;
+						$datosTaxonomicos->taxoncompleto=$model->jerarquiaTaxonomica;
+						$datosTaxonomicos->autor=$model->autor;
+						$datosTaxonomicos->paginaweb=$model->paginaWeb;
+						$datosTaxonomicos->validate();
+						yii::log(var_dump($datosTaxonomicos->getErrors()));
+						$datosTaxonomicos->save(false);
+						$model->pcaatCe=$datosTaxonomicos;
+						
+						$model->save(false);
+						$transaction->commit();
+					} catch (Exception $e) {
+						$transaction->rollback();
+						Yii::log("Error occurred while saving catalog species data. Rolling back... . Failure reason as reported in exception: " . $e->getMessage(), 'error');
+						$success_saving_all = false;
+					}
+					
+					if($success_saving_all) {
+						$this->redirect(array('view','id'=>$model->catalogoespecies_id));
+					} else {
+						//$this->redirect(array("catalogo/index"));
+					}
+				}
+				
+				$date = date('Y-m-d');
+				
+				$model->fechaelaboracion=$date;
+				$model->fechaactualizacion=$date;
+				
+				$this->render('create',array(
+						'model'=>$model,
+						'citaciones'=>$citaciones,
+						'contactos'=>$contactos,
+				));
 			}
-		
-			$date = date('Y-m-d');
-		
-			$model->fechaelaboracion=$date;
-			$model->fechaactualizacion=$date;
-
-			$this->render('create',array(
-				'model'=>$model,
-				'citaciones'=>$citaciones,
-				'contactos'=>$contactos,
-			));
+			
 		}
 	}
 	
