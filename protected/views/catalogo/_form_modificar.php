@@ -322,16 +322,18 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 
 <div class="tabbable"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Datos básicos</a></li>
-    <li><a href="#tab2" data-toggle="tab">Info. taxonómica</a></li>
-    <li><a href="#tab3" data-toggle="tab">Citación</a></li>
-    <li><a href="#tab4" data-toggle="tab">Contacto</a></li>
+  	<?php if(Yii::app()->user->getState("roles") == "admin"){?>
+    <li ><a href="#tab1" data-toggle="tab">Datos básicos</a></li>
+    <?php }?>
+    <li class="active"><a href="#tab2" data-toggle="tab">Info. taxonómica</a></li>
+    <!--  <li><a href="#tab3" data-toggle="tab">Citación</a></li>-->
     <li><a href="#tab5" data-toggle="tab">Nombres comunes</a></li>
     <li><a href="#tab6" data-toggle="tab">Distribución geográfica</a></li>
     <li><a href="#tab7" data-toggle="tab">Atributos</a></li>
+    <li><a href="#tab4" data-toggle="tab">Contacto</a></li>
   </ul>
   <div class="tab-content">
-    <div class="tab-pane fade in active" id="tab1">
+    <div class="tab-pane fade " id="tab1">
     
     <fieldset>
     	<legend>Verificación de la ficha</legend>
@@ -347,7 +349,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     </fieldset>
     
     </div>
-    <div class="tab-pane fade" id="tab2">
+    <div class="tab-pane fade in active" id="tab2">
     	<legend>Datos taxonómicos</legend>
     	<?php echo $form->textFieldRow($model, 'jerarquianombrescomunes', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
     	<?php echo $form->textFieldRow($model, 'jerarquiaTaxonomica', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
