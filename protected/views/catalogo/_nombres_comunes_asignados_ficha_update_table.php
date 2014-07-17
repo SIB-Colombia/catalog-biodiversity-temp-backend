@@ -11,12 +11,12 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     'dataProvider'=>$dataProvider,
 	//'ajaxUrl'=>'/index.php/catalogo/updateajaxmodifytables',
     'columns'=>array(
-    	array( 'name'=>'Id tesauro', 'value'=>'$data->id_tesauros', 'htmlOptions'=>array('width'=>'80')),
+    	//array( 'name'=>'Id tesauro', 'value'=>'$data->id_tesauros', 'htmlOptions'=>array('width'=>'80')),
     	array( 'name'=>'Nombre común', 'value'=>'$data->tesauronombre'),
     	array( 'name'=>'Grupo humano', 'value'=>'$data->grupohumano'),
     	array( 'name'=>'Idioma', 'value'=>'$data->idioma'),
     	array( 'name'=>'Región donde se usa', 'value'=>'$data->regionesgeograficas'),
-    	array( 'name'=>'Tesauro completo', 'value'=>'$data->tesaurocompleto'),
+    	//array( 'name'=>'Tesauro completo', 'value'=>'$data->tesaurocompleto'),
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{delete}',
