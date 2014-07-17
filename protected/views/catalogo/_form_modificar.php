@@ -630,6 +630,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     				</div>
     			</div>
     		</div>
+    		<!-- 
     		<div class="accordion-group">
     			<div class="accordion-heading">
     				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
@@ -640,7 +641,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     				<div class="accordion-inner">
     					<div class="row">
     						<div class="span6 padding-left">
-    							<?php $box = $this->beginWidget('bootstrap.widgets.TbBox', array(
+    							<?php /*$box = $this->beginWidget('bootstrap.widgets.TbBox', array(
 									'title' => 'CAR asignadas a la ficha',
     								'headerIcon' => 'icon-th-list',
     								//'htmlOptions' => array('class'=>'bootstrap-widget-table'),
@@ -649,12 +650,14 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     							<?php $this->endWidget();?>
     						</div>
     						<div class="span6">
-    							<?php echo $this->renderPartial('_corporaciones_ficha_update_table', array('corporaciones'=>$corporaciones, 'idCatalogo'=>$model->catalogoespecies_id)); ?>
+    							<?php echo $this->renderPartial('_corporaciones_ficha_update_table', array('corporaciones'=>$corporaciones, 'idCatalogo'=>$model->catalogoespecies_id));*/ ?>
     						</div>
     					</div>
     				</div>
     			</div>
     		</div>
+    		 -->
+    		 <!-- 
     		<div class="accordion-group">
     			<div class="accordion-heading">
     				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
@@ -665,7 +668,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     				<div class="accordion-inner">
     					<div class="row">
     						<div class="span6 padding-left">
-    							<?php $box = $this->beginWidget('bootstrap.widgets.TbBox', array(
+    							<?php /*$box = $this->beginWidget('bootstrap.widgets.TbBox', array(
 									'title' => 'Organizaciones asignadas a la ficha',
     								'headerIcon' => 'icon-th-list',
     								//'htmlOptions' => array('class'=>'bootstrap-widget-table'),
@@ -674,12 +677,12 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     							<?php $this->endWidget();?>
     						</div>
     						<div class="span6">
-    							<?php echo $this->renderPartial('_organizaciones_ficha_update_table', array('organizaciones'=>$organizaciones, 'idCatalogo'=>$model->catalogoespecies_id)); ?>
+    							<?php echo $this->renderPartial('_organizaciones_ficha_update_table', array('organizaciones'=>$organizaciones, 'idCatalogo'=>$model->catalogoespecies_id)); */?>
     						</div>
     					</div>
     				</div>
     			</div>
-    		</div>
+    		</div> -->
     	</div>
     </div> <!-- Fin tab6, distribucion geográfica -->
     <div class="tab-pane fade" id="tab7">
