@@ -95,14 +95,14 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 	<div class="controls">
 		<select name="Atributos[tipoAtributo]" id="Atributos_tipoAtributo">
 			<option value>Seleccione</option>
-			<optgroup label="Etimología del nombre científico">
+			<!-- <optgroup label="Etimología del nombre científico">
 				<option value="30:text">Etimología del nombre científico</option>
-			</optgroup>
+			</optgroup> -->
 			<optgroup label="Distribución">
 				<option value="8:text">Distribución geográfica en Colombia</option>
-				<option value="148:text">Distribución geográfica en el mundo</option>
+				<!-- <option value="148:text">Distribución geográfica en el mundo</option>
 				<option value="11:text">Región natural</option>
-				<option value="10:text">Ecosistema</option>
+				<option value="10:text">Ecosistema</option> -->
 				<option value="1:text">Distribución altitudinal</option>
 				<option value="149:text">Registros biológicos</option>
 			</optgroup>
@@ -110,7 +110,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 				<option value="36:text">Descripción general</option>
 				<option value="31:text">Hábitat</option>
 				<option value="903:text">Hábito</option>
-				<option value="904:text">Origen</option>
+				<!-- <option value="904:text">Origen</option> -->
 				<option value="22:text">Alimentación</option>
 				<option value="26:text">Comportamiento</option>
 				<option value="32:text">Vocalizaciones</option>
@@ -125,7 +125,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 			</optgroup>
 			<optgroup label="Taxonomía">
 				<option value="12:text">Descripción taxonómica</option>
-				<option value="150:text">Información de tipos</option>
+				<!-- <option value="150:text">Información de tipos</option> -->
 				<option value="27:text">Claves taxonómicas</option>
 			</optgroup>
 			<optgroup label="Estado de conservación">
@@ -140,25 +140,25 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 				<option value="15:text">Información de alerta</option>
 			</optgroup>
 			<optgroup label="Más información">
-				<option value="437:text">Metadatos</option>
+				<!-- <option value="437:text">Metadatos</option> -->
 				<option value="18:text">Otros recursos en Internet</option>
 				<option value="28:dropdown">Referencias bibliográficas</option>
-				<option value="21:text">Recursos multimedia</option>
+				<!-- <option value="21:text">Recursos multimedia</option> -->
 				<option value="32210:text">Sinónimos</option>	
 			</optgroup>
 			<optgroup label="Créditos">
 				<option value="19:dropdown">Autor(es)</option>
 				<option value="20:dropdown">Editor(es)</option>
-				<option value="25:dropdown">Revisor(es)</option>
-				<option value="24:dropdown">Colaborador(es)</option>
+				<!-- <option value="25:dropdown">Revisor(es)</option>
+				<option value="24:dropdown">Colaborador(es)</option> -->
 				<option value="436:text">Créditos específicos</option>
 			</optgroup>
-			<optgroup label="Multimedia">
+			<!-- <optgroup label="Multimedia">
 				<option value="39:upload">Imagen</option>
 				<option value="40:upload">Mapa</option>
 				<option value="41:upload">Video</option>
 				<option value="42:upload">Sonido</option>
-			</optgroup>			
+			</optgroup> -->			
 		</select>
 		<span class="help-inline error" id="Catalogoespecies_idEstadoVerificacion_em_" style="display: none"></span>
 	</div>
