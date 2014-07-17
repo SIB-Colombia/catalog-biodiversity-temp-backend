@@ -21,7 +21,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     'dataProvider'=>$dataProvider,
 	'enablePagination' => true,
     'columns'=>array(
-    	array( 'name'=>'Id', 'value'=>'$data->id_departamento', 'htmlOptions'=>array('width'=>'80')),
+    	//array( 'name'=>'Id', 'value'=>'$data->id_departamento', 'htmlOptions'=>array('width'=>'80')),
     	array( 'name'=>'Nombre departamento', 'value'=>'$data->sub_nombre'),
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',

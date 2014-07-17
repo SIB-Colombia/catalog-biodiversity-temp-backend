@@ -20,7 +20,7 @@ $this->widget('bootstrap.widgets.TbGridView', array(
     'dataProvider'=>$dataProvider,
 	'enablePagination' => true,
     'columns'=>array(
-    	array( 'name'=>'Id', 'value'=>'$data->id_region_natural', 'htmlOptions'=>array('width'=>'80')),
+    	//array( 'name'=>'Id', 'value'=>'$data->id_region_natural', 'htmlOptions'=>array('width'=>'80')),
     	array( 'name'=>'Región natural', 'value'=>'$data->regionnatural'),
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
