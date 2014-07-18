@@ -707,7 +707,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     		<?php echo $this->renderPartial('_adicionar_atributos', array('idCatalogo'=>$model->catalogoespecies_id, 'attributeReferenciasBibliograficas'=>$citaciones, 'contactos'=>$contactos)); ?>
     	</div>
     	<div id="zona-lista-atributos">
-    		<?php echo $this->renderPartial('_atributos_listado', array('atributos'=>$atributos, 'model'=>$model)); ?>
+    		<?php echo $this->renderPartial('_atributos_listado', array('atributos'=>$atributos, 'model'=>$model));?>
     	</div>
     </div> <!-- Fin tab7 -->
   </div>

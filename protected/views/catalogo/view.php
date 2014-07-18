@@ -25,7 +25,7 @@ $this->widget('bootstrap.widgets.TbButtonGroup', array(
 		'contacto_id',
 		'fechaactualizacion',
 		'fechaelaboracion',
-		'titulometadato',
-		'jerarquianombrescomunes',
+		//'titulometadato',
+		//'jerarquianombrescomunes',
 	),
 )); ?>
