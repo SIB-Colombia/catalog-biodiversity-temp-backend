@@ -346,8 +346,8 @@ class CatalogoController extends Controller
 		
 		$atributos["Distribución altitudinal"]=array(); // 1
 		$atributos["Estado de amenaza según categorías UICN"]=array(); // 2
-		//$atributos["Estado de amenaza según categorías UICN"]["En Colombia"]=array(); // 3
-		//$atributos["Estado de amenaza según categorías UICN"]["En el mundo"]=array(); // 4
+		$atributos["Estado de amenaza según categorías UICN"]["En Colombia"]=array(); // 3
+		$atributos["Estado de amenaza según categorías UICN"]["En el mundo"]=array(); // 4
 		$atributos["Estado CITES"]=array(); // 5
 		$atributos["Factores de amenaza"]=array(); // 6
 		$atributos["Estado actual de la población"]=array(); // 7
