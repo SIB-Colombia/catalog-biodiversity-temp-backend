@@ -21,8 +21,8 @@ $this->widget('bootstrap.widgets.TbButtonGroup', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'catalogoespecies_id',
-		'citacion_id',
-		'contacto_id',
+		//'citacion_id',
+		//'contacto_id',
 		'fechaactualizacion',
 		'fechaelaboracion',
 		//'titulometadato',

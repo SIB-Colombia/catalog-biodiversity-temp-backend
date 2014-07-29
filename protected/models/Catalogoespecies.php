@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 /**
  * This is the model class for table "catalogoespecies".
@@ -42,6 +42,14 @@ class Catalogoespecies extends CActiveRecord
 	private $_organizacionContacto;
 	private $_listaNombresComunes;
 	public 	$ids_filter; 
+	private $_reino;
+	private $_filo;
+	private $_clase;
+	private $_orden;
+	private $_familia;
+	private $_genero;
+	private $_epEspecifico;
+	private $_nombreCientifico;
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -69,7 +77,7 @@ class Catalogoespecies extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('citacion_id, contacto_id, fechaactualizacion, fechaelaboracion', 'required'),
+			array('contacto_id, fechaactualizacion, fechaelaboracion,reino,filo,clase,orden,familia,genero,epEspecifico,nombreCientifico,autor', 'required'),
 			array('catalogoespecies_id, citacion_id, contacto_id', 'numerical', 'integerOnly'=>true),
 			array('titulometadato', 'length', 'max'=>255),
 			// The following rule is used by search().
@@ -122,11 +130,13 @@ class Catalogoespecies extends CActiveRecord
 			'jerarquiaTaxonomica'=>'Jerarquía taxonómica',
 			'taxonNombre'=>'Nombre científico',
 			'autor'=>'Autor',
-			'paginaWeb'=>'Página web',
+			'paginaWeb'=>'Enlace EOL',
 			'tituloCita'=>'Título de la cita',
 			'autorCita'=>'Autor de la cita',
 			'personaContacto'=>'Nombre del contacto',
-			'organizacionContacto'=>'Organización'
+			'organizacionContacto'=>'Organización',
+			'genero'	=> 'Género',
+			'epEspecifico'	=> 'Epíteto Específico'
 		);
 	}
 
@@ -194,6 +204,70 @@ class Catalogoespecies extends CActiveRecord
 				'defaultOrder' => '"pcaatCe".taxonnombre',
 			),
 		));
+	}
+	
+	public function getReino(){
+		return $this->_reino;
+	}
+	
+	public function setReino($value){
+		$this->_reino = $value;
+	}
+	
+	public function getFilo(){
+		return $this->_filo;
+	}
+	
+	public function setFilo($value){
+		$this->_filo = $value;
+	}
+	
+	public function getClase(){
+		return $this->_clase;
+	}
+	
+	public function setClase($value){
+		$this->_clase = $value;
+	}
+	
+	public function getOrden(){
+		return $this->_orden;
+	}
+	
+	public function setOrden($value){
+		$this->_orden = $value;
+	}
+	
+	public function getFamilia(){
+		return $this->_familia;
+	}
+	
+	public function setFamilia($value){
+		$this->_familia = $value;
+	}
+	
+	public function getGenero(){
+		return $this->_genero;
+	}
+	
+	public function setGenero($value){
+		$this->_genero = $value;
+	}
+	
+	public function getEpEspecifico(){
+		return $this->_epEspecifico;
+	}
+	
+	public function setEpEspecifico($value){
+		$this->_epEspecifico = $value;
+	}
+	
+	public function getNombreCientifico(){
+		return $this->_nombreCientifico;
+	}
+	
+	public function setNombreCientifico($value){
+		$this->_nombreCientifico = $value;
 	}
 	
 	public function getIdEstadoVerificacion() {

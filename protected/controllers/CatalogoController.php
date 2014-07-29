@@ -333,7 +333,16 @@ class CatalogoController extends Controller
 		// Asigno variables virtuales
 		$model->idEstadoVerificacion=$model->verificacionce->estado_id;
 		$model->comentarioVerificacion=$model->verificacionce->comentarios;
-		$model->jerarquiaTaxonomica=$model->pcaatCe->taxoncompleto;
+		//$model->jerarquiaTaxonomica=$model->pcaatCe->taxoncompleto;
+		$taxonArbol = explode(" >> ", $model->pcaatCe->taxoncompleto);
+		$model->reino = $taxonArbol[0];
+		$model->filo = $taxonArbol[1];
+		$model->clase = $taxonArbol[2];
+		$model->orden = $taxonArbol[3];
+		$model->familia = $taxonArbol[4];
+		$model->genero = $taxonArbol[5];
+		$model->epEspecifico = $taxonArbol[6];
+		$model->nombreCientifico = $taxonArbol[7];
 		$model->taxonNombre=$model->pcaatCe->taxonnombre;
 		$model->autor=$model->pcaatCe->autor;
 		$model->paginaWeb=$model->pcaatCe->paginaweb;
@@ -614,8 +623,9 @@ class CatalogoController extends Controller
 				// Fin de almacenamiento datos de verificación
 				
 				// Guardar datos taxonómicos
-				$model->pcaatCe->taxonnombre=$model->taxonNombre;
-				$model->pcaatCe->taxoncompleto=$model->jerarquiaTaxonomica;
+								
+				$model->pcaatCe->taxonnombre=$model->nombreCientifico;
+				$model->pcaatCe->taxoncompleto=$model->reino." >> ".$model->filo." >> ".$model->clase." >> ".$model->orden." >> ".$model->familia." >> ".$model->genero." >> ".$model->epEspecifico." >> ".$model->nombreCientifico." >> ".$model->autor;
 				$model->pcaatCe->autor=$model->autor;
 				$model->pcaatCe->paginaweb=$model->paginaWeb;
 				// Fin de guardar datos taxonómicos

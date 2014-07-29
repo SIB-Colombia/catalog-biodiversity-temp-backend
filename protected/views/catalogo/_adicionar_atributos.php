@@ -104,7 +104,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 				<option value="11:text">Región natural</option>
 				<option value="10:text">Ecosistema</option> -->
 				<option value="1:text">Distribución altitudinal</option>
-				<option value="149:text">Registros biológicos</option>
+				<!-- <option value="149:text">Registros biológicos</option> -->
 			</optgroup>
 			<optgroup label="Historia Natural">
 				<option value="36:text">Descripción</option>

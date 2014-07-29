@@ -351,9 +351,17 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     </div>
     <div class="tab-pane fade in active" id="tab2">
     	<legend>Datos taxonómicos</legend>
-    	<?php echo $form->textFieldRow($model, 'jerarquianombrescomunes', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
-    	<?php echo $form->textFieldRow($model, 'jerarquiaTaxonomica', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
-    	<?php echo $form->textFieldRow($model, 'taxonNombre', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php //echo $form->textFieldRow($model, 'jerarquianombrescomunes', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
+    	<?php //echo $form->textFieldRow($model, 'jerarquiaTaxonomica', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
+    	<?php //echo $form->textFieldRow($model, 'taxonNombre', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'reino', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'filo', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'clase', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'orden', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'familia', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'genero', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'epEspecifico', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'nombreCientifico', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
     	<?php echo $form->textFieldRow($model, 'autor', array('size'=>220,'maxlength'=>150, 'class'=>'textareaA')); ?>
     	<?php echo $form->textFieldRow($model, 'paginaWeb', array('size'=>220,'maxlength'=>150, 'class'=>'textareaA')); ?>
     </div>
