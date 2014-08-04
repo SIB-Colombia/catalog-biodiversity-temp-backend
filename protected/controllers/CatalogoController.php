@@ -334,15 +334,17 @@ class CatalogoController extends Controller
 		$model->idEstadoVerificacion=$model->verificacionce->estado_id;
 		$model->comentarioVerificacion=$model->verificacionce->comentarios;
 		//$model->jerarquiaTaxonomica=$model->pcaatCe->taxoncompleto;
-		$taxonArbol = explode(" >> ", $model->pcaatCe->taxoncompleto);
-		$model->reino = $taxonArbol[0];
-		$model->filo = $taxonArbol[1];
-		$model->clase = $taxonArbol[2];
-		$model->orden = $taxonArbol[3];
-		$model->familia = $taxonArbol[4];
-		$model->genero = $taxonArbol[5];
-		$model->epEspecifico = $taxonArbol[6];
-		$model->nombreCientifico = $taxonArbol[7];
+		if($model->pcaatCe->taxoncompleto != ""){
+			$taxonArbol = explode(" >> ", $model->pcaatCe->taxoncompleto);
+			$model->reino = $taxonArbol[0];
+			$model->filo = $taxonArbol[1];
+			$model->clase = $taxonArbol[2];
+			$model->orden = $taxonArbol[3];
+			$model->familia = $taxonArbol[4];
+			$model->genero = $taxonArbol[5];
+			$model->epEspecifico = $taxonArbol[6];
+			$model->nombreCientifico = $taxonArbol[7];
+		}
 		$model->taxonNombre=$model->pcaatCe->taxonnombre;
 		$model->autor=$model->pcaatCe->autor;
 		$model->paginaWeb=$model->pcaatCe->paginaweb;
@@ -791,7 +793,7 @@ class CatalogoController extends Controller
 			} else {
 				$catalogoModel = $this->loadModel($id);
 				$catalogoModel->active = 1;
-				$catalogoModel->save();
+				$catalogoModel->save(false);
 			}
 		}
 		

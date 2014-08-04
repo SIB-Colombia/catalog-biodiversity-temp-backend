@@ -136,7 +136,8 @@ class Catalogoespecies extends CActiveRecord
 			'personaContacto'=>'Nombre del contacto',
 			'organizacionContacto'=>'Organización',
 			'genero'	=> 'Género',
-			'epEspecifico'	=> 'Epíteto Específico'
+			'epEspecifico'	=> 'Epíteto Específico',
+			'nombreCientifico' => 'Nombre científico'
 		);
 	}
 
@@ -206,6 +207,22 @@ class Catalogoespecies extends CActiveRecord
 		));
 	}
 	
+	public function obtenerAtributos($id){
+		$criteria=new CDbCriteria;
+		$criteria->compare("catalogoespecies_id",$id);
+		
+		$atributos_ce = CeAtributovalor::model()->findAll($criteria);
+		$datos = array();
+		$cont=0;
+		foreach ($atributos_ce as $atributo_ce){
+			$criteria2=new CDbCriteria;
+			$criteria2->compare("id_atributo",$atributo_ce->etiqueta);
+			$etiqueta = Atributos::model()->find($criteria2);
+			$datos[$etiqueta->nombre] = Atributovalor::model()->findByPk($atributo_ce->valor)->valor;
+			$cont++;
+		}
+		return $datos;
+	}
 	public function getReino(){
 		return $this->_reino;
 	}
