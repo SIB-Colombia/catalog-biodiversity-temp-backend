@@ -202,7 +202,7 @@
     	<?php $this->endWidget();?>
     	<?php } ?> <!-- Fin Estado CITES -->
 
-        <?php if (!empty($atributos["Estado de amenaza según categorías UICN"])) { ?>
+        <?php if (!empty($atributos["Estado de amenaza según categorías UICN"]) && (!empty($atributos["Estado de amenaza según categorías UICN"]["En Colombia"]) && !empty($atributos["Estado de amenaza según categorías UICN"]["En el mundo"]))) { ?>
         <?php $box = $this->beginWidget('bootstrap.widgets.TbBox', array(
             'title' => 'Estado de amenaza según categorías UICN',
             'headerIcon' => 'icon-th-list',

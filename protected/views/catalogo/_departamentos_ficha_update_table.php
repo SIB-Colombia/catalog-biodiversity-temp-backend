@@ -40,7 +40,7 @@
 		),
 	),
     'columns'=>array(
-    	array( 'name'=>'id_departamento', 'htmlOptions'=>array('width'=>'80')),
+    	//array( 'name'=>'id_departamento', 'htmlOptions'=>array('width'=>'80')),
 		'departamento',
 		/*array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',

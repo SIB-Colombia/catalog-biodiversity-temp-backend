@@ -59,6 +59,8 @@ return array(
 				'fichas/carrusel/<tag:.*?>'=>'ficha/carrusel',
 				// REST patterns
 				array('api/list', 'pattern'=>'api/<model:\w+>', 'verb'=>'GET'),
+				array('api/listSpecies', 'pattern'=>'api/list/species', 'verb'=>'GET'),
+				array('api/listPreviewWithImagesRandom', 'pattern'=>'api/fichas/previewrandomspecies', 'verb'=>'GET'),
 				array('api/carrusel', 'pattern'=>'api/fichas/<model:\w+>', 'verb'=>'GET'),
 				array('api/view', 'pattern'=>'api/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
 				'catalogoUser/<action:\w+>'=>'catalogoUser/<action>',
@@ -97,7 +99,7 @@ return array(
 				/*array(
 					'class'=>'ext.yii-debug-toolbar.YiiDebugToolbarRoute',
 					//'levels'=>'error, warning, trace, profile, info',
-					'ipFilters'=>array('127.0.0.1','192.168.175.1'),
+					'ipFilters'=>array('127.0.0.1','192.168.16.115'),
 				),*/
 				// uncomment the following to show log messages on web pages
 				
