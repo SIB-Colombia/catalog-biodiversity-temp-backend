@@ -40,19 +40,20 @@
 		),
 	),
     'columns'=>array(
-    	array( 'name'=>'id_tesauros', 'htmlOptions'=>array('width'=>'80')),
+    	/*array( 'name'=>'id_tesauros', 'htmlOptions'=>array('width'=>'80')),*/
 		'tesauronombre',
     	'grupohumano',
     	'idioma',
 		'regionesgeograficas',
-    	'tesaurocompleto',
+    	/*'tesaurocompleto',*/
 		/*array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{view}{update}{delete}',
+			//'template'=>'{view}{update}{delete}',
+				'template'=>'{delete}',
 			'htmlOptions'=>array('style'=>'width: 50px'),
-			'viewButtonUrl'=>'Yii::app()->createUrl("/Model/view", array("id"=>$data["id_tesauros"]))',
-			'updateButtonUrl'=>'Yii::app()->createUrl("/Model/update", array("id"=>$data["id_tesauros"]))',
-			'deleteButtonUrl'=>'Yii::app()->createUrl("/Model/delete", array("id"=>$data["id_tesauros"]))',
+			//'viewButtonUrl'=>'Yii::app()->createUrl("/Model/view", array("id"=>$data["id_tesauros"]))',
+			//'updateButtonUrl'=>'Yii::app()->createUrl("/Model/update", array("id"=>$data["id_tesauros"]))',
+			'deleteButtonUrl'=>'Yii::app()->createUrl("/catalogo/delete", array("id"=>$data["catalogoespecies_id"], "idTesauro"=>$data["id_tesauros"]))',
 		),*/
 	),
 )); ?>

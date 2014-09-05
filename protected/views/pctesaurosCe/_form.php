@@ -15,7 +15,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	<?php echo $form->textFieldRow($model, 'idioma', array('size'=>50,'maxlength'=>50, 'class'=>'textareaA')); ?>
 	<?php echo $form->textFieldRow($model, 'grupohumano', array('size'=>50,'maxlength'=>50, 'class'=>'textareaA')); ?>
 	<?php echo $form->textFieldRow($model, 'regionesgeograficas', array('size'=>60,'maxlength'=>100, 'class'=>'textareaA')); ?>
-	<?php echo $form->textFieldRow($model, 'paginaweb', array('size'=>60,'maxlength'=>255, 'class'=>'textareaA')); ?>
-	<?php echo $form->textFieldRow($model, 'tesaurocompleto', array('size'=>60,'maxlength'=>255, 'class'=>'textareaA')); ?>
+	<?php //echo $form->textFieldRow($model, 'paginaweb', array('size'=>60,'maxlength'=>255, 'class'=>'textareaA')); ?>
+	<?php //echo $form->textFieldRow($model, 'tesaurocompleto', array('size'=>60,'maxlength'=>255, 'class'=>'textareaA')); ?>
 
 <?php $this->endWidget(); ?>

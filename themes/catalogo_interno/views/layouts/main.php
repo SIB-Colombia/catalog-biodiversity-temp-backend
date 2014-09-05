@@ -87,7 +87,7 @@
 						)),*/
 					),
 				),
-				'<form class="navbar-search pull-left" action=""><input type="text" class="search-query span2" placeholder="Buscar"></form>',
+				//'<form class="navbar-search pull-left" action=""><input type="text" class="search-query span2" placeholder="Buscar"></form>',
 				'<img class="pull-right" src="'.Yii::app()->theme->baseUrl.'/images/logo_sib.png">',
 				array(
 					'class'=>'bootstrap.widgets.TbMenu',
@@ -143,8 +143,8 @@
 							array('label'=>'Nueva ficha', 'icon'=>'icon-plus', 'url'=>array('catalogo/create')),
 							$arr_title_contact,
 							$arr_menu_contact,
-							array('label'=>'Citaciones'),
-							array('label'=>'Nueva citación', 'icon'=>'icon-plus', 'url'=>array('citacion/create')),
+							array('label'=>'BIBLIOGRAFÍA'),
+							array('label'=>'Nueva referencia', 'icon'=>'icon-plus', 'url'=>array('citacion/create')),
 							$arr_title_export,
 							$arr_menu_export,
 							$arr_title,

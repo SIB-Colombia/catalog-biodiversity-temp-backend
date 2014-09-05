@@ -1,4 +1,4 @@
-<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+﻿<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
 'id'=>'newAttributeConfirmation',
 // additional javascript options for the dialog plugin
 'options'=>array(
@@ -95,70 +95,73 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 	<div class="controls">
 		<select name="Atributos[tipoAtributo]" id="Atributos_tipoAtributo">
 			<option value>Seleccione</option>
-			<optgroup label="Etimología del nombre científico">
+			<!-- <optgroup label="Etimología del nombre científico">
 				<option value="30:text">Etimología del nombre científico</option>
-			</optgroup>
+			</optgroup> -->
 			<optgroup label="Distribución">
-				<option value="8:text">Distribución geográfica en Colombia</option>
-				<option value="148:text">Distribución geográfica en el mundo</option>
+				<option value="8:text">Distribución geográfica</option>
+				<!-- <option value="148:text">Distribución geográfica en el mundo</option>
 				<option value="11:text">Región natural</option>
-				<option value="10:text">Ecosistema</option>
+				<option value="10:text">Ecosistema</option> -->
 				<option value="1:text">Distribución altitudinal</option>
-				<option value="149:text">Registros biológicos</option>
+				<!-- <option value="149:text">Registros biológicos</option> -->
 			</optgroup>
 			<optgroup label="Historia Natural">
-				<option value="36:text">Descripción general</option>
+				<option value="36:text">Descripción</option>
 				<option value="31:text">Hábitat</option>
 				<option value="903:text">Hábito</option>
-				<option value="904:text">Origen</option>
+				<!-- <option value="904:text">Origen</option> -->
 				<option value="22:text">Alimentación</option>
 				<option value="26:text">Comportamiento</option>
 				<option value="32:text">Vocalizaciones</option>
 				<option value="35:text">Reproducción</option>
 				<option value="17:text">Ecología</option>
+				<option value="7:text">Demografía</option>
 			</optgroup>
 			<optgroup label="Invasión">
-				<option value="6784:dropdown">Invasora</option>
+				<option value="6784:dropdown">¿Es invasora?</option>
 				<option value="3529:text">Descripción de la invasión</option>
 				<option value="3530:text">Impactos</option>
-				<option value="3531:text">Mecanismos de control</option>
+				<option value="3531:text">Plan de manejo</option>
 			</optgroup>
 			<optgroup label="Taxonomía">
 				<option value="12:text">Descripción taxonómica</option>
-				<option value="150:text">Información de tipos</option>
+				<!-- <option value="150:text">Información de tipos</option> -->
 				<option value="27:text">Claves taxonómicas</option>
+				<option value="32210:text">Sinónimos</option>	
 			</optgroup>
 			<optgroup label="Estado de conservación">
 				<option value="2:multi">Estado de amenaza según categorías UICN</option>
 				<option value="5:dropdown">Estado CITES</option>
-				<option value="7:text">Estado actual de la población</option>
-				<option value="6:text">Factores de amenaza</option>
-				<option value="16:text">Medidas de conservación</option>
+				<option value="6:text">Amenaza</option>
+				<option value="16:text">Manejo y Conservación</option>
 			</optgroup>
-			<optgroup label="Uso y tráfico">
+			<optgroup label="Usos">
 				<option value="14:text">Información de usos</option>
-				<option value="15:text">Información de alerta</option>
+				<!-- <option value="15:text">Información de alerta</option>-->
 			</optgroup>
-			<optgroup label="Más información">
-				<option value="437:text">Metadatos</option>
-				<option value="18:text">Otros recursos en Internet</option>
+			<optgroup label="Bibliografía">
+				<!-- <option value="437:text">Metadatos</option> -->
+				<option value="18:text">Recursos en Internet</option>
 				<option value="28:dropdown">Referencias bibliográficas</option>
-				<option value="21:text">Recursos multimedia</option>
-				<option value="32210:text">Sinónimos</option>	
+				<!-- <option value="21:text">Recursos multimedia</option> -->
 			</optgroup>
-			<optgroup label="Créditos">
-				<option value="19:dropdown">Autor(es)</option>
+			<optgroup label="Partes asociadas">
+				<option value="19:dropdown">Proveedores de contenidos</option>
 				<option value="20:dropdown">Editor(es)</option>
-				<option value="25:dropdown">Revisor(es)</option>
-				<option value="24:dropdown">Colaborador(es)</option>
+				<!-- <option value="25:dropdown">Revisor(es)</option>
+				<option value="24:dropdown">Colaborador(es)</option> -->
 				<option value="436:text">Créditos específicos</option>
 			</optgroup>
 			<optgroup label="Multimedia">
+				<option value="21:text">Recursos multimedia</option>
+			</optgroup>
+			<!-- <optgroup label="Multimedia">
 				<option value="39:upload">Imagen</option>
 				<option value="40:upload">Mapa</option>
 				<option value="41:upload">Video</option>
 				<option value="42:upload">Sonido</option>
-			</optgroup>			
+			</optgroup> -->			
 		</select>
 		<span class="help-inline error" id="Catalogoespecies_idEstadoVerificacion_em_" style="display: none"></span>
 	</div>

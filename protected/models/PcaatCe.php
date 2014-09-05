@@ -73,7 +73,7 @@ class PcaatCe extends CActiveRecord
 			'catalogoespecies_id' => 'ID de ficha',
 			'taxonnombre' => 'Nombre científico',
 			'taxoncompleto' => 'Taxon completo',
-			'paginaweb' => 'Página Eeb',
+			'paginaweb' => 'Enlace EOL',
 			'autor' => 'Autor',
 		);
 	}

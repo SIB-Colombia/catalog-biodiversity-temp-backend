@@ -32,11 +32,11 @@ class ContactosController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('update', 'actualizarDepartamento', 'actualizarMunicipio'),
+				'actions'=>array('create','update', 'actualizarDepartamento', 'actualizarMunicipio'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete','create','actualizarDepartamento', 'actualizarMunicipio'),
+				'actions'=>array('admin','delete','actualizarDepartamento', 'actualizarMunicipio'),
 				'roles'=>array('admin'),
 			),
 			array('deny',  // deny all users

@@ -40,7 +40,7 @@
 		),
 	),
     'columns'=>array(
-    	array( 'name'=>'id_region_natural', 'htmlOptions'=>array('width'=>'80')),
+    	//array( 'name'=>'id_region_natural', 'htmlOptions'=>array('width'=>'80')),
 		'region_natural',
 		/*array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',

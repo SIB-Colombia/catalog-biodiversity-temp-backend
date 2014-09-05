@@ -322,16 +322,18 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 
 <div class="tabbable"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Datos básicos</a></li>
-    <li><a href="#tab2" data-toggle="tab">Info. taxonómica</a></li>
-    <li><a href="#tab3" data-toggle="tab">Citación</a></li>
-    <li><a href="#tab4" data-toggle="tab">Contacto</a></li>
+  	<?php if(Yii::app()->user->getState("roles") == "admin"){?>
+    <li ><a href="#tab1" data-toggle="tab">Datos básicos</a></li>
+    <?php }?>
+    <li class="active"><a href="#tab2" data-toggle="tab">Info. taxonómica</a></li>
+    <!--  <li><a href="#tab3" data-toggle="tab">Citación</a></li>-->
     <li><a href="#tab5" data-toggle="tab">Nombres comunes</a></li>
     <li><a href="#tab6" data-toggle="tab">Distribución geográfica</a></li>
     <li><a href="#tab7" data-toggle="tab">Atributos</a></li>
+    <li><a href="#tab4" data-toggle="tab">Contacto</a></li>
   </ul>
   <div class="tab-content">
-    <div class="tab-pane fade in active" id="tab1">
+    <div class="tab-pane fade " id="tab1">
     
     <fieldset>
     	<legend>Verificación de la ficha</legend>
@@ -347,11 +349,19 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     </fieldset>
     
     </div>
-    <div class="tab-pane fade" id="tab2">
+    <div class="tab-pane fade in active" id="tab2">
     	<legend>Datos taxonómicos</legend>
-    	<?php echo $form->textFieldRow($model, 'jerarquianombrescomunes', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
-    	<?php echo $form->textFieldRow($model, 'jerarquiaTaxonomica', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
-    	<?php echo $form->textFieldRow($model, 'taxonNombre', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php //echo $form->textFieldRow($model, 'jerarquianombrescomunes', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
+    	<?php //echo $form->textFieldRow($model, 'jerarquiaTaxonomica', array('size'=>220,'maxlength'=>255, 'class'=>'textareaA')); ?>
+    	<?php //echo $form->textFieldRow($model, 'taxonNombre', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'reino', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'filo', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'clase', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'orden', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'familia', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'genero', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'epEspecifico', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
+    	<?php echo $form->textFieldRow($model, 'nombreCientifico', array('size'=>220,'maxlength'=>100, 'class'=>'textareaA')); ?>
     	<?php echo $form->textFieldRow($model, 'autor', array('size'=>220,'maxlength'=>150, 'class'=>'textareaA')); ?>
     	<?php echo $form->textFieldRow($model, 'paginaWeb', array('size'=>220,'maxlength'=>150, 'class'=>'textareaA')); ?>
     </div>
@@ -628,6 +638,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     				</div>
     			</div>
     		</div>
+    		<!-- 
     		<div class="accordion-group">
     			<div class="accordion-heading">
     				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
@@ -638,7 +649,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     				<div class="accordion-inner">
     					<div class="row">
     						<div class="span6 padding-left">
-    							<?php $box = $this->beginWidget('bootstrap.widgets.TbBox', array(
+    							<?php /*$box = $this->beginWidget('bootstrap.widgets.TbBox', array(
 									'title' => 'CAR asignadas a la ficha',
     								'headerIcon' => 'icon-th-list',
     								//'htmlOptions' => array('class'=>'bootstrap-widget-table'),
@@ -647,12 +658,14 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     							<?php $this->endWidget();?>
     						</div>
     						<div class="span6">
-    							<?php echo $this->renderPartial('_corporaciones_ficha_update_table', array('corporaciones'=>$corporaciones, 'idCatalogo'=>$model->catalogoespecies_id)); ?>
+    							<?php echo $this->renderPartial('_corporaciones_ficha_update_table', array('corporaciones'=>$corporaciones, 'idCatalogo'=>$model->catalogoespecies_id));*/ ?>
     						</div>
     					</div>
     				</div>
     			</div>
     		</div>
+    		 -->
+    		 <!-- 
     		<div class="accordion-group">
     			<div class="accordion-heading">
     				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour">
@@ -663,7 +676,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     				<div class="accordion-inner">
     					<div class="row">
     						<div class="span6 padding-left">
-    							<?php $box = $this->beginWidget('bootstrap.widgets.TbBox', array(
+    							<?php /*$box = $this->beginWidget('bootstrap.widgets.TbBox', array(
 									'title' => 'Organizaciones asignadas a la ficha',
     								'headerIcon' => 'icon-th-list',
     								//'htmlOptions' => array('class'=>'bootstrap-widget-table'),
@@ -672,12 +685,12 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     							<?php $this->endWidget();?>
     						</div>
     						<div class="span6">
-    							<?php echo $this->renderPartial('_organizaciones_ficha_update_table', array('organizaciones'=>$organizaciones, 'idCatalogo'=>$model->catalogoespecies_id)); ?>
+    							<?php echo $this->renderPartial('_organizaciones_ficha_update_table', array('organizaciones'=>$organizaciones, 'idCatalogo'=>$model->catalogoespecies_id)); */?>
     						</div>
     					</div>
     				</div>
     			</div>
-    		</div>
+    		</div> -->
     	</div>
     </div> <!-- Fin tab6, distribucion geográfica -->
     <div class="tab-pane fade" id="tab7">
@@ -702,7 +715,7 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     		<?php echo $this->renderPartial('_adicionar_atributos', array('idCatalogo'=>$model->catalogoespecies_id, 'attributeReferenciasBibliograficas'=>$citaciones, 'contactos'=>$contactos)); ?>
     	</div>
     	<div id="zona-lista-atributos">
-    		<?php echo $this->renderPartial('_atributos_listado', array('atributos'=>$atributos, 'model'=>$model)); ?>
+    		<?php echo $this->renderPartial('_atributos_listado', array('atributos'=>$atributos, 'model'=>$model));?>
     	</div>
     </div> <!-- Fin tab7 -->
   </div>
