@@ -683,6 +683,8 @@ class ApiController extends Controller
 						$condition= new CDbCriteria();
 						$condition->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
 						$condition->join .= 'INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id")';
+						$condition->join .= 'INNER JOIN "public".humedales_y_paramos ON "public".humedales_y_paramos.catalogoespecies_id = "t".catalogoespecies_id';
+						$condition->addCondition('"public".humedales_y_paramos.tipo = \'Paramo\'');
 						//$condition->with = array('pcaatCe', 'citacion', 'verificacionce', 'pctesaurosCes', 'pcdepartamentosCes', 'pcregionnaturalCes', 'pccorporacionesCes', 'pcorganizacionesCes', 'ceAtributovalors');
 						if(isset($_GET['scientificname'])) {
 							$condition->compare('LOWER("pcaatCe".taxonnombre)', strtolower($_GET['scientificname']), true );
@@ -814,11 +816,12 @@ class ApiController extends Controller
 						$unionSQLALL = 'select count(*) FROM (('.$queryWithImages.') UNION ALL ('.$queryWithoutImages.')) AS totalRegs';
 						$models = Catalogoespecies::model()->findAllBySql($unionSQL);
 						$countreg = Catalogoespecies::model()->countBySql($unionSQLALL);
-						//yii::log(CVarDumper::dumpAsString($models[0]->catalogoespecies_id), CLogger::LEVEL_INFO);
 					} else {
 						$condition= new CDbCriteria();
 						$condition->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
 						$condition->join .= 'INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id")';
+						$condition->join .= 'INNER JOIN "public".humedales_y_paramos ON "public".humedales_y_paramos.catalogoespecies_id = "t".catalogoespecies_id';
+						$condition->addCondition('"public".humedales_y_paramos.tipo = \'Humedal\'');
 						//$condition->with = array('pcaatCe', 'citacion', 'verificacionce', 'pctesaurosCes', 'pcdepartamentosCes', 'pcregionnaturalCes', 'pccorporacionesCes', 'pcorganizacionesCes', 'ceAtributovalors');
 						if(isset($_GET['scientificname'])) {
 							$condition->compare('LOWER("pcaatCe".taxonnombre)', strtolower($_GET['scientificname']), true );
