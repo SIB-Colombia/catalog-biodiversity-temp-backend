@@ -57,6 +57,8 @@
 			$('.barralateral_secundaria').jScrollPane();
 		});
 	</script>
+	
+	
 </head>
 
 <body>
@@ -110,6 +112,7 @@
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span2">
+
 				<div class="menu-izquierda">
 					<?php
 								
@@ -164,8 +167,8 @@
 					)); ?>
 				</div> <!-- Fin menu-izquierda -->
 			</div> <!-- Fin span3 -->
-			<div class="span10">
-				<div class="area-contenido">
+			<div class="span10" id="printDiv">
+				<div class="area-contenido" >
 					<?php echo $content; ?>
 				</div> <!-- Fin area-contenido -->
 			</div> <!-- Fin span9 -->

@@ -14,6 +14,30 @@ $this->widget('bootstrap.widgets.TbButtonGroup', array(
 		),
 ));
 ?>
+<script type="text/javascript">
+	var ventimp;
+	
+	function printFrame(div)
+	{
+		var elemento=document.getElementById(div);
+		ventimp=window.open(' ','popimpr');
+		ventimp.document.write("<link rel='stylesheet' type='text/css' href='<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap_catalogo.css' />");
+		ventimp.document.write("<link rel='stylesheet' type='text/css' href='<?php echo Yii::app()->theme->baseUrl; ?>/css/main.css' />");
+		ventimp.document.write("<link rel='stylesheet' type='text/css' href='<?php echo Yii::app()->theme->baseUrl; ?>/css/styles.css' />");
+		ventimp.document.write("<link rel='stylesheet' type='text/css' href='<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap.css' />");
+		ventimp.document.write("<link rel='stylesheet' type='text/css' href='<?php echo Yii::app()->theme->baseUrl; ?>/css/bootstrap-box.css' />");
+		ventimp.document.write(elemento.innerHTML);
+		ventimp.document.close();
+		window.setTimeout('printPage()',100)
+	}
+
+	function printPage(){
+		ventimp.print();
+		ventimp.close();		
+	}
+</script>
+
+<i class="icon-print printR" onclick="printFrame('printDiv');" style="float: right;cursor: pointer;"></i>
 
 <h1>Datos de ficha con ID No. <?php echo $model->catalogoespecies_id; ?></h1>
 
