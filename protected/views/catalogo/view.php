@@ -55,6 +55,7 @@ $this->widget('bootstrap.widgets.TbButtonGroup', array(
 		//'titulometadato',
 		//'jerarquianombrescomunes',
 	),
+		
 )); ?>
 <br>
 <?php 
@@ -63,9 +64,8 @@ $this->widget('bootstrap.widgets.TbButtonGroup', array(
 		$this->widget('bootstrap.widgets.TbDetailView', array(
 			'data'=>$atributo,
 			'attributes'=>array(
-					array('label'=>$clave,'value'=>$atributo),
-					
-			),
+					array('label'=>$clave,'value'=>$atributo,'type' => 'raw')
+			)
 		));
 	}
 	//print_r($model->obtenerAtributos($model->catalogoespecies_id));
