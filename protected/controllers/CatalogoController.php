@@ -337,13 +337,13 @@ class CatalogoController extends Controller
 		if($model->pcaatCe->taxoncompleto != ""){
 			$taxonArbol = explode(" >> ", $model->pcaatCe->taxoncompleto);
 			$model->reino = $taxonArbol[0];
-			$model->filo = $taxonArbol[1];
-			$model->clase = $taxonArbol[2];
-			$model->orden = $taxonArbol[3];
-			$model->familia = $taxonArbol[4];
-			$model->genero = $taxonArbol[5];
-			$model->epEspecifico = $taxonArbol[6];
-			$model->nombreCientifico = $taxonArbol[7];
+			$model->filo = isset($taxonArbol[1]) ? $taxonArbol[1] : "";
+			$model->clase = isset($taxonArbol[2]) ? $taxonArbol[2] : "";
+			$model->orden = isset($taxonArbol[3]) ? $taxonArbol[3] : "";
+			$model->familia = isset($taxonArbol[4]) ? $taxonArbol[4] : "";
+			$model->genero = isset($taxonArbol[5]) ? $taxonArbol[5] : "";
+			$model->epEspecifico = isset($taxonArbol[6]) ? $taxonArbol[6] : "";
+			$model->nombreCientifico = isset($taxonArbol[7]) ? $taxonArbol[7] : "";
 		}
 		$model->taxonNombre=$model->pcaatCe->taxonnombre;
 		$model->autor=$model->pcaatCe->autor;
