@@ -402,9 +402,10 @@ class CatalogoController extends Controller
 		$atributos["Registros biológicos"]=array(); // 149
 		$atributos["Sinónimos"]=array(); // 32210
 		foreach($model->ceAtributovalors as $ceAtributoValor) {
-			if($ceAtributoValor->etiqueta == "1") {
+			if($ceAtributoValor->etiqueta == "1" && isset($ceAtributoValor->valor)) {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
+				//print_r($etiquetaValor);Yii::app()->end();
 				array_push($atributos["Distribución altitudinal"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
 			} else if($ceAtributoValor->etiqueta == "2") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
