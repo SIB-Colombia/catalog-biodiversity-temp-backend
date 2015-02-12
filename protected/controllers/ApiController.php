@@ -887,6 +887,26 @@ class ApiController extends Controller
 					Yii::app()->end();
 				}
 				break;
+				
+				case 'external_images':
+					if (isset($_GET['taxon_nombre']) && $_GET['taxon_nombre'] != '') {
+					
+						$externalImage = Yii::app()->db->createCommand()
+						->select('external_images.*')
+						->from('public.external_images')
+						->where("external_images.taxonnombre = '".$_GET['taxon_nombre']."'")
+						->order('external_images.id')
+						->queryAll();
+					
+						if(is_null($externalImage)){
+							$this->_sendResponse(404, 'No Items with image has been found with id '.$_GET['id']);
+						}else{
+							$this->_sendResponse(200, CJSON::encode($externalImage));
+							//print_r($externalImage);
+						}
+					}
+				break;
+				
 			default:
 				// Model not implemented error
 				$this->_sendResponse(501, sprintf(
