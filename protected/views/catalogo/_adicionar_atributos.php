@@ -146,13 +146,13 @@ $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 				<option value="28:dropdown">Referencias bibliográficas</option>
 				<!-- <option value="21:text">Recursos multimedia</option> -->
 			</optgroup>
-			<optgroup label="Partes asociadas">
+			<!--  <optgroup label="Partes asociadas">
 				<option value="19:dropdown">Proveedores de contenidos</option>
 				<option value="20:dropdown">Editor(es)</option>
 				<!-- <option value="25:dropdown">Revisor(es)</option>
-				<option value="24:dropdown">Colaborador(es)</option> -->
+				<option value="24:dropdown">Colaborador(es)</option>
 				<option value="436:text">Créditos específicos</option>
-			</optgroup>
+			</optgroup>-->
 			<optgroup label="Multimedia">
 				<option value="21:text">Recursos multimedia</option>
 			</optgroup>

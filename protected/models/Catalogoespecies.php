@@ -218,7 +218,8 @@ class Catalogoespecies extends CActiveRecord
 			$criteria2=new CDbCriteria;
 			$criteria2->compare("id_atributo",$atributo_ce->etiqueta);
 			$etiqueta = Atributos::model()->find($criteria2);
-			$datos[$etiqueta->nombre] = Atributovalor::model()->findByPk($atributo_ce->valor)->valor;
+			$valorAux = Atributovalor::model()->findByPk($atributo_ce->valor);
+			$datos[$etiqueta->nombre] = (isset($valorAux->valor)) ? $valorAux->valor : "";
 			$cont++;
 		}
 		return $datos;
