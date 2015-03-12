@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 ob_start("ob_gzhandler");
 class ApiController extends Controller
 {
@@ -1462,7 +1462,7 @@ class ApiController extends Controller
 			$message = '';
 	
 			// this is purely optional, but makes the pages a little nicer to read
-			// for your users.  Since you won't likely send a lot of different status codes,
+			// for your users.  Since you won't likely send a lot of difaferent status codes,
 			// this also shouldn't be too ponderous to maintain
 			switch($status)
 			{
@@ -1503,6 +1503,23 @@ class ApiController extends Controller
 			echo $body;
 		}
 		Yii::app()->end();
+	}
+	
+	public function actionPdfCompiler(){
+		if ($_GET['id'] != 0) {
+			$modelContacto = Contactos::model()->findByPk($_GET['id']);
+			$emailContacto = $modelContacto->correo_electronico;
+			$modelVer 	= Catalogoespecies::model()->with('verificacionce')->findAll('"verificacionce"."contacto_id"=:contactoId', array(':contactoId' => $emailContacto));
+	
+			if (count($modelVer) > 0) {
+				for ($i = 0; $i < count($modelVer); $i++) {
+					//$ids[] = $modelVer[$i]->catalogoespecies_id;
+					exec("phantomjs rasterize.js http://localhost:4000/fichas/".$modelVer[$i]->catalogoespecies_id." Ficha_".$modelVer[$i]->catalogoespecies_id.".pdf Letter");
+					//exec("phantomjs rasterize.js http://http://192.168.206.34:4000/fichas/".$modelVer[$i]->catalogoespecies_id." Ficha_".$modelVer[$i]->catalogoespecies_id.".png ");
+				}
+			}
+	
+		}
 	}
 	
 	private function _getStatusCodeMessage($status)

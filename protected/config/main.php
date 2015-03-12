@@ -64,6 +64,7 @@ return array(
 				array('api/listPreviewWithImagesRandomParamo', 'pattern'=>'api/fichas/previewrandomspeciesparamo', 'verb'=>'GET'),
 				array('api/listPreviewWithImagesRandomHumedal', 'pattern'=>'api/fichas/previewrandomspecieshumedal', 'verb'=>'GET'),
 				array('api/carrusel', 'pattern'=>'api/fichas/<model:\w+>', 'verb'=>'GET'),
+				array('api/pdfCompiler', 'pattern'=>'api/pdfCompiler/<id:\d+>', 'verb'=>'GET'),
 				array('api/view', 'pattern'=>'api/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
 				'catalogoUser/<action:\w+>'=>'catalogoUser/<action>',
 				'catalogoUser/<id:\w+>'=>'catalogoUser/view',
