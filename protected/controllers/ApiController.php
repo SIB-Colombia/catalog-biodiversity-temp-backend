@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 ob_start("ob_gzhandler");
 class ApiController extends Controller
 {
@@ -1356,10 +1356,10 @@ class ApiController extends Controller
 			if(isset($model->ceAtributovalors)) {
 				$atributos=$model->ceAtributovalors;
 				foreach($atributos as $atributo) {
-					if(isset($atributo->atributo)) {
+					if(isset($atributo)) { //print_r($atributo->atributo); //Yii::app()->end();
 						if($atributo->etiqueta == 3 || $atributo->etiqueta == 4) {
-							$rows[$model->catalogoespecies_id]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
-						} else if($atributo->atributo->nombre == "Referencias bibliográficas") {
+							$rows[$model->catalogoespecies_id]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->etiqueta0->valor][]=$atributo->valor0->valor;
+						} else if($atributo->etiqueta0->valor == "Referencias bibliográficas") {
 							$citacion=Citacion::model()->findByPk($atributo->valor0->valor);
 							$arreglo=$citacion->attributes;
 							if(isset($citacion->citaciontipo)) {
@@ -1370,7 +1370,7 @@ class ApiController extends Controller
 								$arreglo["organizacion_repositorio_citacion"]=$citacion->repositorioCitacion->organizacion;
 							}
 							$rows[$model->catalogoespecies_id]["atributos"][$atributo->atributo->nombre][]=$arreglo;
-						} else if($atributo->atributo->nombre == "Autor(es)" || $atributo->atributo->nombre == "Editor(es)" || $atributo->atributo->nombre == "Revisor(es)" || $atributo->atributo->nombre == "Colaborador(es)") {
+						} else if($atributo->etiqueta0->valor == "Autor(es)" || $atributo->etiqueta0->valor == "Editor(es)" || $atributo->etiqueta0->valor == "Revisor(es)" || $atributo->etiqueta0->valor == "Colaborador(es)") {
 							$contacto=Contactos::model()->findByPk($atributo->valor0->valor);
 							$arreglo2=$contacto->attributes;
 							if(isset($contacto->idReferenteGeografico)) {
@@ -1378,9 +1378,9 @@ class ApiController extends Controller
 								$arreglo2["departamento_estado_provincia"] = $contacto->idReferenteGeografico->idSub->subAbreviatura->sub_nombre;
 								$arreglo2["municipio"] = $contacto->idReferenteGeografico->idCm->ciudad_municipio_nombre;
 							}
-							$rows[$model->catalogoespecies_id]["atributos"][$atributo->atributo->nombre][]=$arreglo2;
+							$rows[$model->catalogoespecies_id]["atributos"][$atributo->etiqueta0->valor][]=$arreglo2;
 						} else if($atributo->etiqueta != 2) {
-							$rows[$model->catalogoespecies_id]["atributos"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+							$rows[$model->catalogoespecies_id]["atributos"][$atributo->etiqueta0->valor][]=$atributo->valor0->valor;
 						}
 					}
 				}
@@ -1506,15 +1506,29 @@ class ApiController extends Controller
 	}
 	
 	public function actionPdfCompiler(){
+		
 		if ($_GET['id'] != 0) {
 			$modelContacto = Contactos::model()->findByPk($_GET['id']);
 			$emailContacto = $modelContacto->correo_electronico;
-			$modelVer 	= Catalogoespecies::model()->with('verificacionce')->findAll('"verificacionce"."contacto_id"=:contactoId', array(':contactoId' => $emailContacto));
-	
+			
+			$criteria=new CDbCriteria;
+			//$criteria->with = array('verificacionce');
+			$criteria->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
+			$criteria->join .= 'INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id")';
+			$criteria->compare("verificacionce.contacto_id",$emailContacto);
+			$criteria->compare("verificacionce.estado_id",1);
+			$criteria->compare('active',0);
+			$criteria->order = 't.catalogoespecies_id ASC';
+			$criteria->limit = 20;
+			$criteria->offset = $_GET['off'];
+			//$criteria->addCondition('"verificacionce".estado_id = 2');
+			$modelVer 	= Catalogoespecies::model()->findAll($criteria);
+			//print_r($modelVer);Yii::app()->end();
 			if (count($modelVer) > 0) {
 				for ($i = 0; $i < count($modelVer); $i++) {
 					//$ids[] = $modelVer[$i]->catalogoespecies_id;
-					exec("phantomjs rasterize.js http://localhost:4000/fichas/".$modelVer[$i]->catalogoespecies_id." Ficha_".$modelVer[$i]->catalogoespecies_id.".pdf Letter");
+					print_r("-".$i."->".$modelVer[$i]->catalogoespecies_id);
+					exec("phantomjs rasterize.js http://localhost/catalogo/index.php/catalogo/".$modelVer[$i]->catalogoespecies_id." Ficha_".$modelVer[$i]->catalogoespecies_id.".pdf Letter");
 					//exec("phantomjs rasterize.js http://http://192.168.206.34:4000/fichas/".$modelVer[$i]->catalogoespecies_id." Ficha_".$modelVer[$i]->catalogoespecies_id.".png ");
 				}
 			}
