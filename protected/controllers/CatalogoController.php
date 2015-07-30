@@ -480,7 +480,9 @@ class CatalogoController extends Controller
 			} else if($ceAtributoValor->etiqueta == "21") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
-				array_push($atributos["Recursos multimedia"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
+				if($atributoValor != '' && $etiquetaValor != ''){
+					array_push($atributos["Recursos multimedia"], array('ceatributovalor_id'=>$ceAtributoValor->ceatributovalor_id, 'etiqueta'=>$ceAtributoValor->etiqueta, 'valor'=>$ceAtributoValor->valor, 'etiquetaValor'=>$etiquetaValor->valor, 'contenido'=>$atributoValor->valor));
+				}
 			} else if($ceAtributoValor->etiqueta == "22") {
 				$atributoValor=Atributovalor::model()->findByPk($ceAtributoValor->valor);
 				$etiquetaValor=Atributovalor::model()->findByPk($ceAtributoValor->etiqueta);
@@ -942,4 +944,5 @@ class CatalogoController extends Controller
 			Yii::app()->end();
 		}
 	}
+	
 }
