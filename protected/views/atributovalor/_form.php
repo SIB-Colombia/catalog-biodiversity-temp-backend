@@ -25,5 +25,5 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 <?php $this->endWidget(); ?>
 
 <script type="text/javascript">
-$('#textoValorAtributo').wysihtml5();
+//$('#textoValorAtributo').wysihtml5({"html":true,"color":true});
 </script>
