@@ -1263,6 +1263,7 @@ class ApiController extends Controller
 			// Prepare response
 			$rows = array();
 			$rows[$model->catalogoespecies_id] = $model->attributes;
+			$rows[$model->catalogoespecies_id]["licencia"] = htmlspecialchars_decode($model->licenciaInfo);
 			if(isset($model->pcaatCe)) {
 				$rows[$model->catalogoespecies_id]["info_taxonomica"] = $model->pcaatCe->attributes;
 				if (preg_match('/Reino(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
@@ -1379,7 +1380,7 @@ class ApiController extends Controller
 								$arreglo2["municipio"] = $contacto->idReferenteGeografico->idCm->ciudad_municipio_nombre;
 							}
 							$rows[$model->catalogoespecies_id]["atributos"][$atributo->etiqueta0->valor][]=$arreglo2;
-						} else if($atributo->etiqueta != 2) {
+						} else if($atributo->etiqueta != 2 && isset($atributo->etiqueta0) && isset($atributo->valor0)) {
 							$rows[$model->catalogoespecies_id]["atributos"][$atributo->etiqueta0->valor][]=$atributo->valor0->valor;
 						}
 					}
@@ -1507,23 +1508,23 @@ class ApiController extends Controller
 	
 	public function actionPdfCompiler(){
 		
-		if ($_GET['id'] != 0) {
-			$modelContacto = Contactos::model()->findByPk($_GET['id']);
-			$emailContacto = $modelContacto->correo_electronico;
+		if (isset($_GET['off'])) {
+			//$modelContacto = Contactos::model()->findByPk($_GET['id']);
+			//$emailContacto = $modelContacto->correo_electronico;
 			
 			$criteria=new CDbCriteria;
 			//$criteria->with = array('verificacionce');
-			$criteria->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
+			/*$criteria->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
 			$criteria->join .= 'INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id")';
 			$criteria->compare("verificacionce.contacto_id",$emailContacto);
-			$criteria->compare("verificacionce.estado_id",1);
-			$criteria->compare('active',0);
+			$criteria->compare("verificacionce.estado_id",1);s
+			$criteria->compare('active',0);*/
 			$criteria->order = 't.catalogoespecies_id ASC';
-			$criteria->limit = 20;
+			$criteria->limit = 4;
 			$criteria->offset = $_GET['off'];
 			//$criteria->addCondition('"verificacionce".estado_id = 2');
 			$modelVer 	= Catalogoespecies::model()->findAll($criteria);
-			//print_r($modelVer);Yii::app()->end();
+			//print_r(count($modelVer));Yii::app()->end();
 			if (count($modelVer) > 0) {
 				for ($i = 0; $i < count($modelVer); $i++) {
 					//$ids[] = $modelVer[$i]->catalogoespecies_id;
@@ -1533,6 +1534,41 @@ class ApiController extends Controller
 				}
 			}
 	
+		}
+	}
+
+	public function actionLicence()
+	{
+		if(isset($_POST['ids'])){
+
+			$ids_array = explode(' ', $_POST['ids']);
+			//print_r($ids_array);
+
+			foreach ($ids_array as $key => $value) {
+				# code...
+				$criteria = new CDbCriteria;
+				$criteria->compare('catalogoespecies_id',$value);
+
+				$modelCatalogo = Catalogoespecies::model()->find($criteria);
+				$transaction = Yii::app()->db->beginTransaction();
+
+				if(isset($modelCatalogo) && $modelCatalogo != ""){
+					$infoHtml = '<br><br>';
+					$infoHtml .= '<span style="font-size: 12px"><b>Licencia:</b>';
+					$infoHtml .= '<a target="_blank" rel="nofollow" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span><br>';
+					$infoHtml .= '<span style="font-size: 10px"><b>Fuente:</b>Instituto de Investigación de Recursos Biológicos Alexander von Humboldt</span><br>';
+					$infoHtml = htmlspecialchars($infoHtml);
+					
+					//print_r(htmlspecialchars_decode($infoHtml));
+					$modelCatalogo->licenciaInfo = $infoHtml;
+
+					$modelCatalogo->save(false);
+					$transaction->commit();
+
+					echo "id:".$value." ok;";
+
+				}
+			}
 		}
 	}
 	

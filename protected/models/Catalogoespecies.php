@@ -12,6 +12,7 @@
  * @property string $titulometadato
  * @property string $jerarquianombrescomunes
  * @property int $active
+ * @property string licenciaInfo
  *
  * The followings are the available model relations:
  * @property PcaatCe $pcaatCe
@@ -137,7 +138,8 @@ class Catalogoespecies extends CActiveRecord
 			'organizacionContacto'=>'Organización',
 			'genero'	=> 'Género',
 			'epEspecifico'	=> 'Epíteto Específico',
-			'nombreCientifico' => 'Nombre científico'
+			'nombreCientifico' => 'Nombre científico',
+			'licenciaInfo'		=> 'Información adicional'
 		);
 	}
 
