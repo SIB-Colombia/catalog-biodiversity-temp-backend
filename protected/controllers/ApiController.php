@@ -1264,31 +1264,45 @@ class ApiController extends Controller
 			$rows = array();
 			$rows[$model->catalogoespecies_id] = $model->attributes;
 			$rows[$model->catalogoespecies_id]["licencia"] = htmlspecialchars_decode($model->licenciaInfo);
+			$taxonArbol = explode(" >> ", $model->pcaatCe->taxoncompleto);
 			if(isset($model->pcaatCe)) {
 				$rows[$model->catalogoespecies_id]["info_taxonomica"] = $model->pcaatCe->attributes;
 				if (preg_match('/Reino(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["reino"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}else{
+					$rows[$model->catalogoespecies_id]["reino"] = $taxonArbol[0];
 				}
 				if (preg_match('/Phylum(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["phylum"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}else{
+					$rows[$model->catalogoespecies_id]["phylum"] = isset($taxonArbol[1]) ? $taxonArbol[1] : "";
 				}
 				if (preg_match('/Clase(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["clase"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}else{
+					$rows[$model->catalogoespecies_id]["clase"] = isset($taxonArbol[2]) ? $taxonArbol[2] : "";
 				}
 				if (preg_match('/Orden(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["orden"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}else{
+					$rows[$model->catalogoespecies_id]["orden"] = isset($taxonArbol[3]) ? $taxonArbol[3] : "";
 				}
 				if (preg_match('/Familia(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["familia"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}else{
+					$rows[$model->catalogoespecies_id]["familia"] = isset($taxonArbol[4]) ? $taxonArbol[4] : "";
 				}
 				if (preg_match('/Género(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
-				}
-				if(preg_match('/Genero(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+				}else if(preg_match('/Genero(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}else{
+					$rows[$model->catalogoespecies_id]["genero"] = isset($taxonArbol[5]) ? $taxonArbol[5] : "";
 				}
 				if (preg_match('/Especie(.*)/is', $model->pcaatCe->taxoncompleto, $matches)) {
 					$rows[$model->catalogoespecies_id]["especie"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}else{
+					$rows[$model->catalogoespecies_id]["especie"] = isset($taxonArbol[6]) ? $taxonArbol[6] : "";
 				}
 			}
 			if(isset($model->contacto)) {
