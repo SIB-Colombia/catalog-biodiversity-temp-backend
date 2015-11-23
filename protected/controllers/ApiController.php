@@ -467,6 +467,121 @@ class ApiController extends Controller
 		}
 	}
 
+	public function actionListPreviewWithImagesRandomInvasoras() {
+		$query='SELECT "t"."catalogoespecies_id", "t"."citacion_id", "t"."contacto_id", "t"."fechaactualizacion", "t"."fechaelaboracion", "t"."titulometadato", "t"."jerarquianombrescomunes" FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id") INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") INNER JOIN "public".invasoras ON "public".invasoras.catalogoespecies_id = "t".catalogoespecies_id WHERE "t".catalogoespecies_id IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = \'Imagen\'))  ORDER BY random() limit 20';
+		$models = Catalogoespecies::model()->findAllBySql($query);
+		// Did we get some results?
+		if(empty($models)) {
+			// No
+			$this->_sendResponse(200, CJSON::encode('No items where found'));
+		} else {
+			// Prepare response
+			$rows = array();
+			$rows["data"] = [];
+			$counter = 0;
+			foreach($models as $model) {
+				$rows["data"][$counter]["id"] = $model->catalogoespecies_id;
+				$rows["data"][$counter]["taxon_nombre"] = ($model->pcaatCe->taxonnombre != "" ? $model->pcaatCe->taxonnombre : null);
+				$rows["data"][$counter]["autor"] = ($model->pcaatCe->autor != "" ? $model->pcaatCe->autor : null);
+				if (preg_match('/Reino(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["reino"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Phylum(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["phylum"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Clase(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["clase"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Orden(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["orden"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Familia(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["familia"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Género(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if(preg_match('/Genero(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if (preg_match('/Especie(.*)/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					$rows["data"][$counter]["especie"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+				}
+				if(isset($model->pctesaurosCes)) {
+					$nombresComunes=$model->pctesaurosCes;
+					$rows["data"][$counter]["nombres_comunes"] = [];
+					$counterNombreComun = 0;
+					foreach($nombresComunes as $nombreComun) {
+						$rows["data"][$counter]["nombres_comunes"][$counterNombreComun]["nombre"] = ($nombreComun->tesauronombre != "" ? $nombreComun->tesauronombre : null);
+						$rows["data"][$counter]["nombres_comunes"][$counterNombreComun]["idioma"] = ($nombreComun->idioma != "" ? $nombreComun->idioma : null);
+						$rows["data"][$counter]["nombres_comunes"][$counterNombreComun]["region_geografica"] = ($nombreComun->regionesgeograficas != "" ? $nombreComun->regionesgeograficas : null);
+						$counterNombreComun++;
+					}
+				}
+				if(isset($model->pcdepartamentosCes)) {
+					$departamentos=$model->pcdepartamentosCes;
+					$rows["data"][$counter]["departamentos"] = [];
+					$counterDepartamento = 0;
+					foreach($departamentos as $departamento) {
+						$rows["data"][$counter]["departamentos"][$counterDepartamento]["departamento"] = ($departamento->departamento->departamento != "" ? $departamento->departamento->departamento : null);
+						$counterDepartamento++;
+					}
+				}
+				if(isset($model->ceAtributovalors)) {
+					$atributos=$model->ceAtributovalors;
+					$rows["data"][$counter]["imagenes"]["imagen"] = [];
+					$counterImagen = 0;
+					foreach($atributos as $atributo) {
+						if(isset($atributo->atributo)) {
+							if($atributo->atributo->nombre == "Imagen") {
+								$rows["data"][$counter]["imagenes"]["imagen"][$counterImagen] = $atributo->valor0->valor;
+								$counterImagen++;
+							}
+						}
+					}
+				}
+				if(isset($model->ceAtributovalors)) {
+					$atributos=$model->ceAtributovalors;
+					foreach($atributos as $atributo) {
+						if(isset($atributo->atributo)) {
+							if($atributo->etiqueta == 3 || $atributo->etiqueta == 4) {
+								$rows["data"][$counter]["atributos"]["Estado de amenaza según categorías UICN"][$atributo->atributo->nombre][]=$atributo->valor0->valor;
+							}
+						}
+					}
+				}
+				if(isset($rows["data"][$counter]["imagenes"]["imagen"])) {
+					$counterArray=0;
+					foreach ($rows["data"][$counter]["imagenes"]["imagen"] as $imagen) {
+						$images_path = $_SERVER['DOCUMENT_ROOT'].'/imagen';
+						$extension = end(explode('.', $imagen));
+						$filename = current(explode('.', $imagen));
+						if (!is_dir($images_path.'/resampled/'.$model->catalogoespecies_id)) {
+							mkdir($images_path.'/resampled/'.$model->catalogoespecies_id, 0755, true);
+						}
+						if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
+							$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension, 140, 140, 1);
+						}
+						if(!file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
+							$this->image_resize($images_path.'/'.$imagen, $images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension, 270, 270, 1);
+						}
+						if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_140x140.'.$extension)) {
+							$rows["data"][$counter]["imagenes"]["imagenThumb140"][$counterArray] = 'http://www.biodiversidad.co:3000/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_140x140.'.$extension;
+						}
+						if(file_exists($images_path.'/resampled/'.$model->catalogoespecies_id.'/'.str_replace(' ', '_', $filename).'_270x270.'.$extension)) {
+							$rows["data"][$counter]["imagenes"]["imagenThumb270"][$counterArray] = 'http://www.biodiversidad.co:3000/imagen/resampled/'.$model->catalogoespecies_id.'/'.rawurlencode(str_replace(' ', '_', $filename)).'_270x270.'.$extension;
+						}
+						$rows["data"][$counter]["imagenes"]["imagen"][$counterArray] = 'http://www.biodiversidad.co:3000/imagen/'.rawurlencode($imagen);
+						$counterArray++;
+					}
+				}
+				$counter++;
+			}
+			// Send the response
+			$this->_sendResponse(200, CJSON::encode($rows));
+		}
+	}
+
 	public function actionList()
 	{
 		// Get the respective model instance
@@ -887,6 +1002,146 @@ class ApiController extends Controller
 					Yii::app()->end();
 				}
 				break;
+
+				case 'fichasresumeninvasoras':
+				if(isset($_GET['page'])) {
+					$offset = ($_GET['page'] - 1) * 20;
+					if(isset($_GET['priorityimages'])) {
+						$queryWithImages='SELECT "t"."catalogoespecies_id", "t"."citacion_id", "t"."contacto_id", "t"."fechaactualizacion", "t"."fechaelaboracion", "t"."titulometadato", "t"."jerarquianombrescomunes" FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") INNER JOIN "public".invasoras ON "public".invasoras.catalogoespecies_id = "t".catalogoespecies_id WHERE "verificacionce".estado_id = 1 AND "t".catalogoespecies_id IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = \'Imagen\')) ';
+						$queryWithoutImages='SELECT "t"."catalogoespecies_id", "t"."citacion_id", "t"."contacto_id", "t"."fechaactualizacion", "t"."fechaelaboracion", "t"."titulometadato", "t"."jerarquianombrescomunes" FROM "catalogoespecies" "t" INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id") INNER JOIN "public".invasoras ON "public".invasoras.catalogoespecies_id = "t".catalogoespecies_id WHERE "verificacionce".estado_id = 1 AND "t".catalogoespecies_id NOT IN ((SELECT DISTINCT catalogoespecies.catalogoespecies_id FROM public.catalogoespecies, public.ce_atributovalor, public.atributos WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = \'Imagen\')) ';
+						if(isset($_GET['scientificname'])) {
+							$queryWithImages .= 'AND LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['scientificname']).'%\' ';
+							$queryWithoutImages .= 'AND LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['scientificname']).'%\' ';
+						}
+						if(isset($_GET['taxon'])) {
+							$queryWithImages .= 'AND LOWER("pcaatCe".taxoncompleto) LIKE \'%'.strtolower($_GET['taxon']).'%\' ';
+							$queryWithoutImages .= 'AND LOWER("pcaatCe".taxoncompleto) LIKE \'%'.strtolower($_GET['taxon']).'%\' ';
+						}
+						if(isset($_GET['id'])) {
+							$queryWithImages .= 'AND t.catalogoespecies_id = '.$_GET['id'].' ';
+							$queryWithoutImages .= 'AND t.catalogoespecies_id = '.$_GET['id'].' ';
+						}
+						if(isset($_GET['commonname'])) {
+							$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+								."FROM catalogoespecies "
+								."INNER JOIN pctesauros_ce ON catalogoespecies.catalogoespecies_id = pctesauros_ce.catalogoespecies_id "
+								."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($_GET['commonname'])."%'";
+							$queryWithImages .= 'AND t.catalogoespecies_id IN ('.$sql.') ';
+							$queryWithoutImages .= 'AND t.catalogoespecies_id IN ('.$sql.') ';
+						}
+						if(isset($_GET['query'])) {
+							$queryWithImages .= 'AND (LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['query']).'%\' ';
+							$queryWithoutImages .= 'AND (LOWER("pcaatCe".taxonnombre) LIKE \'%'.strtolower($_GET['query']).'%\' ';							
+							$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+								."FROM catalogoespecies "
+								."INNER JOIN pctesauros_ce ON catalogoespecies.catalogoespecies_id = pctesauros_ce.catalogoespecies_id "
+								."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($_GET['query'])."%'";
+							$queryWithImages .= 'OR t.catalogoespecies_id IN ('.$sql.') ) ';
+							$queryWithoutImages .= 'OR t.catalogoespecies_id IN ('.$sql.') ) ';
+						}
+						$queryWithImages .= 'AND "pcaatCe".taxonnombre <> \'\' ';
+						$queryWithoutImages .= 'AND "pcaatCe".taxonnombre <> \'\' ';
+						if(isset($_GET['order'])) {
+							if($_GET['order'] == "scientificname") {
+								$queryWithImages .= 'ORDER BY "pcaatCe".taxonnombre ';
+								$queryWithoutImages .= 'ORDER BY "pcaatCe".taxonnombre ';
+							} else if($_GET['order'] == "author") {
+								$queryWithImages .= 'ORDER BY "pcaatCe".autor ';
+								$queryWithoutImages .= 'ORDER BY "pcaatCe".autor ';
+							} else {
+								$queryWithImages .= 'ORDER BY fechaelaboracion ';
+								$queryWithoutImages .= 'ORDER BY fechaelaboracion ';
+							}
+						} else {
+							$queryWithImages .= 'ORDER BY fechaelaboracion ';
+							$queryWithoutImages .= 'ORDER BY fechaelaboracion ';
+						}
+						if(isset($_GET['orderdirection'])) {
+							if($_GET['orderdirection'] == "asc") {
+								$queryWithImages .= 'ASC';
+								$queryWithoutImages .= 'ASC';
+							} else {
+								$queryWithImages .= 'DESC';
+								$queryWithoutImages .= 'DESC';
+							}
+						} else {
+							$queryWithImages .= 'DESC';
+							$queryWithoutImages .= 'DESC';
+						}
+						$unionSQL = '('.$queryWithImages.') UNION ALL ('.$queryWithoutImages.') LIMIT 20 OFFSET '.$offset;
+						$unionSQLALL = 'select count(*) FROM (('.$queryWithImages.') UNION ALL ('.$queryWithoutImages.')) AS totalRegs';
+						$models = Catalogoespecies::model()->findAllBySql($unionSQL);
+						$countreg = Catalogoespecies::model()->countBySql($unionSQLALL);
+					} else {
+						$condition= new CDbCriteria();
+						$condition->join = 'INNER JOIN "pcaat_ce" "pcaatCe" ON ("pcaatCe"."catalogoespecies_id"="t"."catalogoespecies_id")';
+						$condition->join .= 'INNER JOIN "verificacionce" "verificacionce" ON ("verificacionce"."catalogoespecies_id"="t"."catalogoespecies_id")';
+						$condition->join .= 'INNER JOIN "public".invasoras ON "public".invasoras.catalogoespecies_id = "t".catalogoespecies_id';
+						$condition->addCondition('"verificacionce".estado_id = 1');
+						//$condition->with = array('pcaatCe', 'citacion', 'verificacionce', 'pctesaurosCes', 'pcdepartamentosCes', 'pcregionnaturalCes', 'pccorporacionesCes', 'pcorganizacionesCes', 'ceAtributovalors');
+						if(isset($_GET['scientificname'])) {
+							$condition->compare('LOWER("pcaatCe".taxonnombre)', strtolower($_GET['scientificname']), true );
+						}
+						if(isset($_GET['taxon'])) {
+							$condition->compare('LOWER("pcaatCe".taxoncompleto)', strtolower($_GET['taxon']), true );
+						}
+						if(isset($_GET['id'])) {
+							$condition->compare('t.catalogoespecies_id',$_GET['id']);
+						}
+						$sql='';
+						if(isset($_GET['commonname'])) {
+							$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+								."FROM catalogoespecies "
+								."INNER JOIN pctesauros_ce ON catalogoespecies.catalogoespecies_id = pctesauros_ce.catalogoespecies_id "
+								."WHERE LOWER(pctesauros_ce.tesauronombre) LIKE '%".strtolower($_GET['commonname'])."%'";
+							$condition->addCondition('t.catalogoespecies_id IN ('.$sql.')', 'OR');
+						}
+						if(isset($_GET['onlyimages'])) {
+							if($_GET['onlyimages'] == "true") {
+								$sql = "SELECT DISTINCT catalogoespecies.catalogoespecies_id "
+									."FROM public.catalogoespecies, public.ce_atributovalor, public.atributos "
+									."WHERE catalogoespecies.catalogoespecies_id = ce_atributovalor.catalogoespecies_id AND ce_atributovalor.id_atributo = atributos.id AND atributos.nombre = 'Imagen'";
+								$condition->addCondition('t.catalogoespecies_id IN ('.$sql.')');
+							}
+						}
+						if(isset($_GET['order'])) {
+							if($_GET['order'] == "scientificname") {
+								$condition->order = '"pcaatCe".taxonnombre';
+							} else if($_GET['order'] == "author") {
+								$condition->order = '"pcaatCe".autor';
+							} else {
+								$condition->order = "fechaelaboracion";
+							}
+						} else {
+							$condition->order = "fechaelaboracion";
+						}
+						if(isset($_GET['orderdirection'])) {
+							if($_GET['orderdirection'] == "asc") {
+								$condition->order = $condition->order." ASC";
+							} else {
+								$condition->order = $condition->order." DESC";
+							}
+						} else {
+							$condition->order = $condition->order." DESC";
+						}
+						$condition->limit=20;
+						$condition->offset=$offset;
+						//print_r($condition);
+						//print_r(Catalogoespecies::model()->getCommandBuilder()->createFindCommand('catalogoespecies', $condition)->text);
+						$models = Catalogoespecies::model()->findAll($condition);
+						$condition->limit=null;
+						$condition->offset=null;
+						$countreg = Catalogoespecies::model()->count($condition);
+					}
+					//$this->render('index');
+					//Yii::app()->end();
+				} else {
+					// Model not implemented error
+					$this->_sendResponse(501, sprintf(
+						'Error: Full list is not implemented for model <b>%s</b>', $_GET['model']) );
+					Yii::app()->end();
+				}
+				break;
 				
 				case 'external_images':
 					if (isset($_GET['taxon_nombre']) && $_GET['taxon_nombre'] != '') {
@@ -921,37 +1176,52 @@ class ApiController extends Controller
 		} else {
 			// Prepare response
 			$rows = array();
-			if($_GET['model'] == "fichasresumen" || $_GET['model'] == "fichasresumenparamo" || $_GET['model'] == "fichasresumenhumedal") {
+			if($_GET['model'] == "fichasresumen" || $_GET['model'] == "fichasresumenparamo" || $_GET['model'] == "fichasresumenhumedal" || $_GET['model'] == "fichasresumeninvasoras") {
 				$rows["data"] = [];
 				$rows["total_fichas"] = $countreg;
 				$counter = 0;
+
 				foreach($models as $model) {
+					$taxonArbol = explode(" >> ", $model->pcaatCe->taxoncompleto);
 					$rows["data"][$counter]["id"] = $model->catalogoespecies_id;
 					$rows["data"][$counter]["taxon_nombre"] = ($model->pcaatCe->taxonnombre != "" ? $model->pcaatCe->taxonnombre : null);
 					$rows["data"][$counter]["autor"] = ($model->pcaatCe->autor != "" ? $model->pcaatCe->autor : null);
 					if (preg_match('/Reino(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["reino"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}else{
+						$rows["data"][$counter]["reino"] = $taxonArbol[0];
 					}
 					if (preg_match('/Phylum(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["phylum"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}else{
+						$rows["data"][$counter]["phylum"] = isset($taxonArbol[1]) ? $taxonArbol[1] : "";
 					}
 					if (preg_match('/Clase(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["clase"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}else{
+						$rows["data"][$counter]["clase"] = isset($taxonArbol[2]) ? $taxonArbol[2] : "";
 					}
 					if (preg_match('/Orden(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["orden"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}else{
+						$rows["data"][$counter]["orden"] = isset($taxonArbol[3]) ? $taxonArbol[3] : "";
 					}
 					if (preg_match('/Familia(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["familia"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}else{
+						$rows["data"][$counter]["familia"] = isset($taxonArbol[4]) ? $taxonArbol[4] : "";
 					}
 					if (preg_match('/Género(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
-					}
-					if(preg_match('/Genero(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
+					}else if(preg_match('/Genero(.*?)>>/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["genero"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}else{
+						$rows["data"][$counter]["genero"] = isset($taxonArbol[5]) ? $taxonArbol[5] : "";
 					}
 					if (preg_match('/Especie(.*)/is', $model->pcaatCe->taxoncompleto, $matches)) {
 						$rows["data"][$counter]["especie"] = (trim($matches[1]) != "" ? trim($matches[1]) : null);
+					}else{
+						$rows["data"][$counter]["especie"] = isset($taxonArbol[6]) ? $taxonArbol[6] : "";
 					}
 					if(isset($model->pctesaurosCes)) {
 						$nombresComunes=$model->pctesaurosCes;
@@ -1534,7 +1804,7 @@ class ApiController extends Controller
 			$criteria->compare("verificacionce.estado_id",1);s
 			$criteria->compare('active',0);*/
 			$criteria->order = 't.catalogoespecies_id ASC';
-			$criteria->limit = 4;
+			$criteria->limit = 60;
 			$criteria->offset = $_GET['off'];
 			//$criteria->addCondition('"verificacionce".estado_id = 2');
 			$modelVer 	= Catalogoespecies::model()->findAll($criteria);
@@ -1569,8 +1839,8 @@ class ApiController extends Controller
 				if(isset($modelCatalogo) && $modelCatalogo != ""){
 					$infoHtml = '<br><br>';
 					$infoHtml .= '<span style="font-size: 12px"><b>Licencia:</b>';
-					$infoHtml .= '<a target="_blank" rel="nofollow" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></span><br>';
-					$infoHtml .= '<span style="font-size: 10px"><b>Fuente:</b>Instituto de Investigación de Recursos Biológicos Alexander von Humboldt</span><br>';
+					$infoHtml .= '<a target="_blank" rel="nofollow" href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0</a></span><br>';
+					$infoHtml .= '<span style="font-size: 10px"><b>Fuente:</b> Instituto de Investigación de Recursos Biológicos Alexander von Humboldt</span><br>';
 					$infoHtml = htmlspecialchars($infoHtml);
 					
 					//print_r(htmlspecialchars_decode($infoHtml));
@@ -1583,6 +1853,30 @@ class ApiController extends Controller
 
 				}
 			}
+		}
+	}
+
+	public function actionListLinks()
+	{
+		if(isset($_POST['ids'])){
+
+			$ids_array = explode(' ', $_POST['ids']);
+			//print_r($ids_array);
+
+			foreach ($ids_array as $key => $value) {
+
+				$criteria = new CDbCriteria;
+				$criteria->compare('catalogoespecies_id',$value);
+				$modelCatalogo = Catalogoespecies::model()->find($criteria);
+				$list = $modelCatalogo->obtenerAtributos($value);
+
+				if(isset($list['Recursos multimedia'])){
+					print_r($key."-".$modelCatalogo->pcaatCe->taxonnombre.";".strip_tags($list['Recursos multimedia'])."\n");
+				}
+
+			}
+
+			
 		}
 	}
 	
@@ -1631,49 +1925,53 @@ class ApiController extends Controller
 	}
 
 	private function image_resize($src, $dst, $width, $height, $crop=0) {
-		if(!list($w, $h) = getimagesize($src)) return "Unsupported picture type!";
+		if(file_exists($src)){
+			if(!list($w, $h) = getimagesize($src)) return "Unsupported picture type!";
+		
 
-		$type = strtolower(substr(strrchr($src,"."),1));
-		if($type == 'jpeg') $type = 'jpg';
-		switch($type) {
-			//case 'bmp': $img = imagecreatefromwbmp($src); break;
-			case 'gif': $img = imagecreatefromgif($src); break;
-			case 'jpg': $img = imagecreatefromjpeg($src); break;
-			case 'png': $img = imagecreatefrompng($src); break;
-			default : return "Unsupported picture type!";
-		}
+			$type = strtolower(substr(strrchr($src,"."),1));
+			if($type == 'jpeg') $type = 'jpg';
+			switch($type) {
+				//case 'bmp': $img = imagecreatefromwbmp($src); break;
+				case 'gif': $img = imagecreatefromgif($src); break;
+				case 'jpg': $img = imagecreatefromjpeg($src); break;
+				case 'png': $img = imagecreatefrompng($src); break;
+				default : return "Unsupported picture type!";
+			}
 
-		// resize
-		if($crop) {
-			if($w < $width or $h < $height) return "Picture is too small!";
-			$ratio = max($width/$w, $height/$h);
-			$h = $height / $ratio;
-			$x = ($w - $width / $ratio) / 2;
-			$w = $width / $ratio;
-		} else {
-			if($w < $width and $h < $height) 
-				return "Picture is too small!";$ratio = min($width/$w, $height/$h);
-			$width = $w * $ratio;
-			$height = $h * $ratio;
-			$x = 0;
-		}
+			// resize
+			if($crop) {
+				if($w < $width or $h < $height) return "Picture is too small!";
+				$ratio = max($width/$w, $height/$h);
+				$h = $height / $ratio;
+				$x = ($w - $width / $ratio) / 2;
+				$w = $width / $ratio;
+			} else {
+				if($w < $width and $h < $height) 
+					return "Picture is too small!";$ratio = min($width/$w, $height/$h);
+				$width = $w * $ratio;
+				$height = $h * $ratio;
+				$x = 0;
+			}
 
-		$new = imagecreatetruecolor($width, $height);
+			$new = imagecreatetruecolor($width, $height);
 
-		// preserve transparency
-		if($type == "gif" or $type == "png") {
-			imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
-			imagealphablending($new, false);
-			imagesavealpha($new, true);
-		}
+			// preserve transparency
+			if($type == "gif" or $type == "png") {
+				imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
+				imagealphablending($new, false);
+				imagesavealpha($new, true);
+			}
 
-		imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
+			imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
 
-		switch($type) {
-			case 'bmp': imagewbmp($new, $dst); break;
-			case 'gif': imagegif($new, $dst); break;
-			case 'jpg': imagejpeg($new, $dst); break;
-			case 'png': imagepng($new, $dst); break;
+			switch($type) {
+				case 'bmp': imagewbmp($new, $dst); break;
+				case 'gif': imagegif($new, $dst); break;
+				case 'jpg': imagejpeg($new, $dst); break;
+				case 'png': imagepng($new, $dst); break;
+			}
+
 		}
 		return true;
 	}
