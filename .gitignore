@@ -8,6 +8,7 @@ tmp/**/*
 *.bak
 *.swp
 *~.nib
+*.copia.php
 local.properties
 .classpath
 .settings/
